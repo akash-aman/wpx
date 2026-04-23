@@ -4,8 +4,16 @@ set -euo pipefail
 # ================================================================
 # wpx installer for macOS (arm64) and Linux (amd64)
 # Usage: curl -fsSL https://raw.githubusercontent.com/akash-aman/wpx/main/install.sh | bash
-# Pin a version: WPX_VERSION=v1.2.3 bash install.sh
+# Pin:   curl -fsSL .../install.sh | bash -s -- --version v0.0.0-test.1
 # ================================================================
+
+# Parse --version flag
+for arg in "$@"; do
+    case "$arg" in
+        --version=*) WPX_VERSION="${arg#*=}" ;;
+        --version)   shift; WPX_VERSION="${1:-}" ;;
+    esac
+done
 
 REPO="akash-aman/wpx"
 GITHUB_API="https://api.github.com/repos/${REPO}"
