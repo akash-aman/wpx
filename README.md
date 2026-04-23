@@ -32,9 +32,14 @@ curl -fsSL https://raw.githubusercontent.com/akash-aman/wpx/main/uninstall.sh | 
 wpx create mysite                        # WordPress site (~12s)
 wpx create mysite --php=8.3              # specific PHP version
 wpx create mysite --db=mariadb           # MariaDB instead of MySQL
-wpx create mysite --cache=redis          # Redis object cache
+wpx create mysite --cache=redis          # Redis object cache (default)
 wpx create mysite --cache=memcached      # Memcached object cache
+wpx create mysite --cache=none           # no object cache
 wpx create mysite --db=sqlite            # SQLite (no DB server)
+wpx create mysite --multisite            # WordPress multisite (subdirectory)
+wpx create mysite --multisite --multisite-subdomains  # multisite (subdomains)
+wpx create mysite --domain=mysite.dev    # custom domain
+wpx create mysite --repo=git@...        # clone repo as wp-content/
 wpx create vipsite --vip                 # VIP Go stack (memcached)
 wpx create vipsite --vip --search        # VIP Go + Elasticsearch
 ```
@@ -59,11 +64,14 @@ wpx destroy --all --force  # destroy everything
 wpx list                   # list all sites with status
 wpx info <site>            # show site details (ports, paths, versions)
 wpx open <site>            # open site in browser
-wpx open <site> --admin    # open wp-admin
-wpx open <site> --mail     # open Mailpit UI
-wpx open <site> --db       # open Adminer
+wpx open <site> admin      # open wp-admin
+wpx open <site> mail       # open Mailpit UI
+wpx open <site> db         # open Adminer
 wpx logs <site>            # tail aggregated logs
+wpx logs <site> -f         # follow log output
 wpx shell <site>           # subshell with site env (php, wp, mysql in PATH)
+wpx env <site>             # print shell exports (use with: eval $(wpx env mysite))
+wpx apply <site>           # regenerate configs from .wpx.json and reload
 ```
 
 ### WordPress & database
@@ -88,7 +96,6 @@ wpx domain list <site>              # list domains
 
 ```bash
 wpx cache flush <site>              # flush object cache
-wpx cache status <site>             # cache status
 ```
 
 ### Xdebug
@@ -106,6 +113,7 @@ wpx proxy start                    # start global reverse proxy (port 80/443)
 wpx proxy stop                     # stop proxy
 wpx proxy status                   # check proxy status
 wpx proxy reload                   # reload proxy config
+wpx proxy clean                    # remove orphan configs for destroyed sites
 ```
 
 ### System
@@ -114,6 +122,7 @@ wpx proxy reload                   # reload proxy config
 wpx doctor                         # preflight checks (platform, ports, SSL, deps)
 wpx doctor --fix                   # auto-fix repairable issues
 wpx orphans                        # detect orphan processes and stale resources
+wpx orphans --fix                  # auto-clean orphans
 wpx version                        # print version
 wpx init                           # initialize ~/.wpx/ and local CA
 wpx upgrade-config <site>          # backfill new defaults into existing site config
@@ -129,7 +138,7 @@ Each site runs its own isolated set of native processes:
 | Web server | nginx | nginx (latest) |
 | PHP | 8.0 – 8.5 | latest |
 | Database | MySQL, MariaDB, SQLite | MySQL (latest) |
-| Cache | Redis, Memcached, none | none |
+| Cache | Redis, Memcached, none | Redis |
 | Search | Elasticsearch (Docker) | disabled |
 | Mail | Mailpit | enabled |
 
@@ -147,7 +156,7 @@ Each site runs its own isolated set of native processes:
 ```
 wpx create mysite
      │
-     ├── ~/.wpx/sites/mysite/
+     ├── ~/WPX Sites/mysite.test/
      │    ├── wp/              # WordPress install
      │    ├── conf/            # nginx, php-fpm, mysql configs
      │    ├── data/            # mysql datadir, redis dump
