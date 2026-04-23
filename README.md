@@ -77,11 +77,15 @@ wpx apply <site>           # regenerate configs from .wpx.json and reload
 ### WordPress & database
 
 ```bash
-wpx wp <site> <command>              # run WP-CLI commands
-wpx db <site> export                 # export database
-wpx db <site> import dump.sql        # import database
-wpx search-replace <site> <old> <new>  # search-replace across all tables
-wpx pull <site>                      # detect domains, propose search-replace, wire nginx/hosts/SSL
+wpx wp <site> <command>                    # run WP-CLI commands
+wpx db <site> export                       # export database
+wpx db <site> import dump.sql              # import database
+wpx db <site> import dump.sql --quick      # fast import (disable checks, 3-5x speed)
+wpx db <site> import dump.sql --turbo      # fastest (strip indexes, import, rebuild)
+wpx db <site> import dump.sql.gz           # import gzip-compressed dump
+wpx search-replace <site> <old> <new>      # search-replace across all tables
+wpx pull <site>                            # detect domains, propose search-replace, wire nginx/hosts/SSL
+wpx pull <site> --quick                    # use Go-native parallel search-replace (faster)
 ```
 
 ### Domain & multisite
