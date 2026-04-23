@@ -89,9 +89,17 @@ VERSION="${WPX_VERSION:-}"
 
 if [[ -z "$VERSION" ]]; then
     info "fetching latest release..."
-    VERSION=$(curl -fsSL "${GITHUB_API}/releases/latest" \
+    # Try stable release first, fall back to newest (including pre-releases)
+    VERSION=$(curl -fsSL "${GITHUB_API}/releases/latest" 2>/dev/null \
         | grep '"tag_name"' \
-        | sed -E 's/.*"([^"]+)".*/\1/') || fail "could not fetch latest version"
+        | sed -E 's/.*"([^"]+)".*/\1/') || true
+    if [[ -z "$VERSION" ]]; then
+        VERSION=$(curl -fsSL "${GITHUB_API}/releases?per_page=1" \
+            | grep '"tag_name"' \
+            | head -1 \
+            | sed -E 's/.*"([^"]+)".*/\1/') || fail "could not fetch latest version"
+    fi
+    [[ -n "$VERSION" ]] || fail "no releases found at ${GITHUB_API}/releases"
 fi
 
 # Ensure version starts with v
