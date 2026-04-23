@@ -186,9 +186,13 @@ remove_from_rc "$HOME/.bashrc"
 remove_from_rc "$HOME/.bash_profile"
 
 # ── Hosts cleanup ─────────────────────────────────────────────
-if grep -q "\.wpx\|# wpx" /etc/hosts 2>/dev/null; then
-    warn "/etc/hosts may still have wpx entries — edit manually:"
-    warn "  sudo nano /etc/hosts"
+if grep -q "wpx-managed" /etc/hosts 2>/dev/null; then
+    info "removing wpx-managed entries from /etc/hosts..."
+    sudo sed -i.bak '/# wpx-managed/d' /etc/hosts 2>/dev/null \
+        || sudo sed -i '' '/# wpx-managed/d' /etc/hosts 2>/dev/null \
+        || true
+    sudo rm -f /etc/hosts.bak 2>/dev/null || true
+    log "cleaned /etc/hosts"
 fi
 
 # ── Done ──────────────────────────────────────────────────────
