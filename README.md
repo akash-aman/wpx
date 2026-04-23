@@ -11,7 +11,13 @@ curl -fsSL https://raw.githubusercontent.com/akash-aman/wpx/main/install.sh | ba
 Pin a specific version:
 
 ```bash
-WPX_VERSION=v0.1.0 curl -fsSL https://raw.githubusercontent.com/akash-aman/wpx/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/akash-aman/wpx/main/install.sh | bash -s -- --version v0.0.0-test.1
+```
+
+## Uninstall
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/akash-aman/wpx/main/uninstall.sh | bash
 ```
 
 ## Quick start
