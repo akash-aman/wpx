@@ -19,6 +19,14 @@ header() { printf "\n${BOLD}%s${NC}\n" "$1"; }
 WPX_HOME="${WPX_HOME:-$HOME/.wpx}"
 WPX_SITES="${WPX_SITES_HOME:-$HOME/WPX Sites}"
 WPX_BIN="/usr/local/bin/wpx"
+FORCE=0
+
+# Parse flags
+for arg in "$@"; do
+    case "$arg" in
+        --force|--yes|-y) FORCE=1 ;;
+    esac
+done
 
 header "wpx uninstaller"
 echo ""
@@ -32,23 +40,28 @@ echo "    6. Remove shell integration from ~/.zshrc / ~/.bashrc"
 echo ""
 
 # ── Confirmation ──────────────────────────────────────────────
-# When piped from curl, stdin is the script itself. Reopen from tty.
-if [[ -t 0 ]]; then
-    read -rp "  Are you sure? This cannot be undone. [y/N] " confirm
-else
-    read -rp "  Are you sure? This cannot be undone. [y/N] " confirm < /dev/tty
-fi
+if [[ "$FORCE" -eq 0 ]]; then
+    if [[ -t 0 ]]; then
+        read -rp "  Are you sure? This cannot be undone. [y/N] " confirm
+    else
+        read -rp "  Are you sure? This cannot be undone. [y/N] " confirm < /dev/tty
+    fi
 
-if [[ ! "$confirm" =~ ^[yY] ]]; then
-    echo "  Aborted."
-    exit 0
+    if [[ ! "$confirm" =~ ^[yY] ]]; then
+        echo "  Aborted."
+        exit 0
+    fi
 fi
 
 # ── 1. Stop proxy ────────────────────────────────────────────
 header "[1/6] Stop proxy"
 
-if command -v wpx &>/dev/null; then
-    wpx proxy stop 2>/dev/null && log "proxy stopped" || warn "proxy was not running"
+WPX_CMD="$(command -v wpx 2>/dev/null || true)"
+[[ -z "$WPX_CMD" && -f "$WPX_BIN" ]] && WPX_CMD="$WPX_BIN"
+[[ -z "$WPX_CMD" && -f "${GOPATH:-$HOME/go}/bin/wpx" ]] && WPX_CMD="${GOPATH:-$HOME/go}/bin/wpx"
+
+if [[ -n "$WPX_CMD" ]]; then
+    "$WPX_CMD" proxy stop 2>/dev/null && log "proxy stopped" || warn "proxy was not running"
 else
     warn "wpx binary not found — skipping proxy stop"
 fi
@@ -56,8 +69,8 @@ fi
 # ── 2. Destroy all sites ─────────────────────────────────────
 header "[2/6] Destroy all sites"
 
-if command -v wpx &>/dev/null; then
-    wpx destroy --all --force 2>/dev/null && log "all sites destroyed" \
+if [[ -n "$WPX_CMD" ]]; then
+    "$WPX_CMD" destroy --all --force 2>/dev/null && log "all sites destroyed" \
         || warn "destroy returned non-zero (sites may not exist)"
 else
     warn "wpx binary not found — skipping site destruction"
@@ -101,29 +114,24 @@ log "killed $KILLED orphan process(es)"
 header "[4/6] Remove binary"
 
 # Find all wpx binaries on the system
-WPX_PATHS=()
+found_any=0
 for candidate in \
     "/usr/local/bin/wpx" \
     "${GOPATH:-$HOME/go}/bin/wpx" \
     "$HOME/.local/bin/wpx" \
     "$(command -v wpx 2>/dev/null || true)"; do
-    [[ -n "$candidate" && -f "$candidate" ]] && WPX_PATHS+=("$candidate")
+    [[ -z "$candidate" || ! -f "$candidate" ]] && continue
+    found_any=1
+    info "removing $candidate..."
+    if [[ -w "$(dirname "$candidate")" ]]; then
+        rm -f "$candidate" && log "removed $candidate" || warn "could not remove $candidate"
+    else
+        sudo rm -f "$candidate" && log "removed $candidate (sudo)" || warn "could not remove $candidate"
+    fi
 done
 
-# Deduplicate
-WPX_PATHS=($(printf '%s\n' "${WPX_PATHS[@]}" | sort -u))
-
-if [[ ${#WPX_PATHS[@]} -eq 0 ]]; then
+if [[ "$found_any" -eq 0 ]]; then
     log "no wpx binary found — already removed"
-else
-    for bin in "${WPX_PATHS[@]}"; do
-        info "removing $bin..."
-        if [[ -w "$(dirname "$bin")" ]]; then
-            rm -f "$bin" && log "removed $bin" || warn "could not remove $bin"
-        else
-            sudo rm -f "$bin" && log "removed $bin (sudo)" || warn "could not remove $bin"
-        fi
-    done
 fi
 
 # ── 5. Remove state directory ────────────────────────────────
@@ -137,15 +145,20 @@ else
 fi
 
 if [[ -d "$WPX_SITES" ]]; then
-    read -rp "  Remove site files at $WPX_SITES? [y/N] " remove_sites
-    case "$remove_sites" in
-        [yY]|[yY][eE][sS])
+    if [[ "$FORCE" -eq 1 ]]; then
+        rm -rf "$WPX_SITES" && log "removed $WPX_SITES" || warn "could not remove $WPX_SITES"
+    else
+        if [[ -t 0 ]]; then
+            read -rp "  Remove site files at $WPX_SITES? [y/N] " remove_sites
+        else
+            read -rp "  Remove site files at $WPX_SITES? [y/N] " remove_sites < /dev/tty
+        fi
+        if [[ "$remove_sites" =~ ^[yY] ]]; then
             rm -rf "$WPX_SITES" && log "removed $WPX_SITES" || warn "could not remove $WPX_SITES"
-            ;;
-        *)
+        else
             warn "kept $WPX_SITES (remove manually if needed)"
-            ;;
-    esac
+        fi
+    fi
 else
     log "$WPX_SITES does not exist"
 fi
@@ -182,4 +195,3 @@ echo ""
 echo "  wpx has been completely removed."
 echo "  Reload your shell: exec \$SHELL"
 echo ""
-
