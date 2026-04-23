@@ -82,6 +82,23 @@ else
     warn "mkcert: not found — install: brew install mkcert nss"
 fi
 
+# PHP extension shared library dependencies (macOS only)
+if [[ "$GOOS" == "darwin" ]]; then
+    EXT_DEPS_MISSING=()
+    for pkg in libyaml imagemagick libmemcached zlib; do
+        if brew list --formula "$pkg" &>/dev/null; then
+            log "$pkg: found"
+        else
+            EXT_DEPS_MISSING+=("$pkg")
+        fi
+    done
+    if [[ ${#EXT_DEPS_MISSING[@]} -gt 0 ]]; then
+        warn "missing PHP extension dependencies: ${EXT_DEPS_MISSING[*]}"
+        info "installing: brew install ${EXT_DEPS_MISSING[*]}"
+        brew install "${EXT_DEPS_MISSING[@]}" || warn "brew install failed — some PHP extensions may not load"
+    fi
+fi
+
 # ── 3. Resolve version ───────────────────────────────────────
 header "[3/8] Resolve version"
 
