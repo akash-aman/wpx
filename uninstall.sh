@@ -100,11 +100,30 @@ log "killed $KILLED orphan process(es)"
 # ── 4. Remove binary ─────────────────────────────────────────
 header "[4/6] Remove binary"
 
-if [[ -f "$WPX_BIN" ]]; then
-    info "removing $WPX_BIN (requires sudo)"
-    sudo rm -f "$WPX_BIN" && log "removed $WPX_BIN" || warn "could not remove $WPX_BIN"
+# Find all wpx binaries on the system
+WPX_PATHS=()
+for candidate in \
+    "/usr/local/bin/wpx" \
+    "${GOPATH:-$HOME/go}/bin/wpx" \
+    "$HOME/.local/bin/wpx" \
+    "$(command -v wpx 2>/dev/null || true)"; do
+    [[ -n "$candidate" && -f "$candidate" ]] && WPX_PATHS+=("$candidate")
+done
+
+# Deduplicate
+WPX_PATHS=($(printf '%s\n' "${WPX_PATHS[@]}" | sort -u))
+
+if [[ ${#WPX_PATHS[@]} -eq 0 ]]; then
+    log "no wpx binary found — already removed"
 else
-    log "binary not found at $WPX_BIN — already removed"
+    for bin in "${WPX_PATHS[@]}"; do
+        info "removing $bin..."
+        if [[ -w "$(dirname "$bin")" ]]; then
+            rm -f "$bin" && log "removed $bin" || warn "could not remove $bin"
+        else
+            sudo rm -f "$bin" && log "removed $bin (sudo)" || warn "could not remove $bin"
+        fi
+    done
 fi
 
 # ── 5. Remove state directory ────────────────────────────────
