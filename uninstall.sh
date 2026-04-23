@@ -182,3 +182,4 @@ echo ""
 echo "  wpx has been completely removed."
 echo "  Reload your shell: exec \$SHELL"
 echo ""
+
