@@ -72,6 +72,8 @@ header "[2/6] Destroy all sites"
 if [[ -n "$WPX_CMD" ]]; then
     "$WPX_CMD" destroy --all --force 2>/dev/null && log "all sites destroyed" \
         || warn "destroy returned non-zero (sites may not exist)"
+    # destroy --all reloads the proxy, so stop it again
+    "$WPX_CMD" proxy stop 2>/dev/null || true
 else
     warn "wpx binary not found — skipping site destruction"
 fi
