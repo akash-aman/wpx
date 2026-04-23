@@ -32,11 +32,17 @@ echo "    6. Remove shell integration from ~/.zshrc / ~/.bashrc"
 echo ""
 
 # ── Confirmation ──────────────────────────────────────────────
-read -rp "  Are you sure? This cannot be undone. [y/N] " confirm
-case "$confirm" in
-    [yY]|[yY][eE][sS]) ;;
-    *) echo "  Aborted."; exit 0 ;;
-esac
+# When piped from curl, stdin is the script itself. Reopen from tty.
+if [[ -t 0 ]]; then
+    read -rp "  Are you sure? This cannot be undone. [y/N] " confirm
+else
+    read -rp "  Are you sure? This cannot be undone. [y/N] " confirm < /dev/tty
+fi
+
+if [[ ! "$confirm" =~ ^[yY] ]]; then
+    echo "  Aborted."
+    exit 0
+fi
 
 # ── 1. Stop proxy ────────────────────────────────────────────
 header "[1/6] Stop proxy"
