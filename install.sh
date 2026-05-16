@@ -1,351 +1,164 @@
 #!/usr/bin/env bash
+# wpx — umbrella installer for the CLI and (on macOS) the desktop app.
+#
+# Usage:
+#   curl -fsSL https://raw.githubusercontent.com/akash-aman/wpx/main/install.sh | bash
+#   curl -fsSL .../install.sh | bash -s -- --version v0.1.0
+#   curl -fsSL .../install.sh | bash -s -- --cli-only
+#   curl -fsSL .../install.sh | bash -s -- --app-only
+#
+# Behaviour by platform:
+#   macOS   → installs the CLI binary AND the .app bundle (default)
+#   Linux   → installs the CLI binary only (no desktop app yet)
+#   other   → fails fast
+#
+# Internals:
+#   • CLI install delegates to cli/install.sh (downloads tar.gz,
+#     verifies sha256, installs to INSTALL_DIR — see that script
+#     for the full flow).
+#   • App install downloads wpx-<version>.dmg from the matching
+#     GitHub release, mounts it, copies wpx.app into /Applications,
+#     and ejects.
+#
+# Idempotent — re-running upgrades both components to the requested
+# version (or latest if --version isn't pinned).
 set -euo pipefail
 
-# ================================================================
-# wpx installer for macOS (arm64) and Linux (amd64)
-# Usage: curl -fsSL https://raw.githubusercontent.com/akash-aman/wpx/main/install.sh | bash
-# Pin:   curl -fsSL .../install.sh | bash -s -- --version v0.0.0-test.1
-# ================================================================
-
-# Parse --version flag
-for arg in "$@"; do
-    case "$arg" in
-        --version=*) WPX_VERSION="${arg#*=}" ;;
-        --version)   shift; WPX_VERSION="${1:-}" ;;
-    esac
-done
-
+# ── Defaults ────────────────────────────────────────────────────
 REPO="akash-aman/wpx"
 GITHUB_API="https://api.github.com/repos/${REPO}"
 GITHUB_DL="https://github.com/${REPO}/releases/download"
+GITHUB_RAW="https://raw.githubusercontent.com/${REPO}"
 
+INSTALL_CLI=true
+INSTALL_APP=true
+WPX_VERSION=""
+BRANCH="main"   # used only for fetching cli/install.sh during dev/test
+
+# ── Args ────────────────────────────────────────────────────────
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --cli-only)      INSTALL_APP=false; shift ;;
+    --app-only)      INSTALL_CLI=false; shift ;;
+    --version)       WPX_VERSION="${2:-}"; shift 2 ;;
+    --version=*)     WPX_VERSION="${1#*=}"; shift ;;
+    --branch)        BRANCH="${2:-}"; shift 2 ;;
+    --branch=*)      BRANCH="${1#*=}"; shift ;;
+    -h|--help)
+      sed -n '2,21p' "$0" | sed 's/^# \{0,1\}//'
+      exit 0
+      ;;
+    *)
+      echo "✗ unknown flag: $1" >&2
+      exit 2
+      ;;
+  esac
+done
+
+# ── Colours ─────────────────────────────────────────────────────
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'
 BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
 
 log()  { printf "${GREEN}  ✓${NC} %s\n" "$1"; }
+info() { printf "${BLUE}  ℹ${NC} %s\n" "$1"; }
 warn() { printf "${YELLOW}  ⚠${NC} %s\n" "$1"; }
 fail() { printf "${RED}  ✗${NC} %s\n" "$1" >&2; exit 1; }
-info() { printf "${BLUE}  →${NC} %s\n" "$1"; }
-header() { printf "\n${BOLD}%s${NC}\n" "$1"; }
 
-WPX_HOME="${WPX_HOME:-$HOME/.wpx}"
-WPX_SITES="${WPX_SITES_HOME:-$HOME/WPX Sites}"
-INSTALL_DIR="/usr/local/bin"
-
-header "wpx installer"
-
-# ── 1. Platform check ────────────────────────────────────────
-header "[1/8] Platform"
-
-OS="$(uname -s)"
-ARCH="$(uname -m)"
-
-case "$OS" in
-    Darwin)
-        GOOS="darwin"
-        [[ "$ARCH" == "arm64" ]] || fail "wpx on macOS supports arm64 only (got $ARCH)"
-        GOARCH="arm64"
-        log "macOS $(sw_vers -productVersion) ($ARCH)"
-        ;;
-    Linux)
-        GOOS="linux"
-        [[ "$ARCH" == "x86_64" ]] || fail "wpx on Linux supports x86_64 only (got $ARCH)"
-        GOARCH="amd64"
-        log "Linux $(uname -r) ($ARCH)"
-        ;;
-    *)
-        fail "unsupported OS: $OS (supported: macOS arm64, Linux amd64)"
-        ;;
+# ── Platform detection ──────────────────────────────────────────
+KERNEL="$(uname -s)"
+case "$KERNEL" in
+  Darwin) PLATFORM="macos" ;;
+  Linux)  PLATFORM="linux"; INSTALL_APP=false ;;  # no desktop app on Linux
+  *)      fail "unsupported platform: $KERNEL (need Darwin or Linux)" ;;
 esac
 
-# ── 2. Dependencies ──────────────────────────────────────────
-header "[2/8] Dependencies"
-
-for dep in curl shasum; do
-    if command -v "$dep" &>/dev/null; then
-        log "$dep: found"
-    else
-        fail "$dep is required but not found"
-    fi
+# ── Dep check ───────────────────────────────────────────────────
+for dep in curl; do
+  command -v "$dep" >/dev/null 2>&1 || fail "$dep is required but not found"
 done
 
-# Optional deps
-if command -v docker &>/dev/null; then
-    log "docker: found (optional — for --search / Elasticsearch)"
+# ── Resolve version ─────────────────────────────────────────────
+if [[ -z "$WPX_VERSION" ]]; then
+  info "querying latest release..."
+  WPX_VERSION=$(curl -fsSL "${GITHUB_API}/releases?per_page=1" \
+                | grep -m1 '"tag_name"' \
+                | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
+  [[ -n "$WPX_VERSION" ]] || fail "no releases found at ${GITHUB_API}/releases"
+fi
+# Always tag-prefix for URL paths; strip for display where it's noise.
+[[ "$WPX_VERSION" == v* ]] || WPX_VERSION="v${WPX_VERSION}"
+VERSION_BARE="${WPX_VERSION#v}"
+
+printf "${BOLD}wpx installer${NC}  ${BLUE}%s${NC}  →  ${BOLD}%s${NC}\n\n" \
+  "$PLATFORM" "$WPX_VERSION"
+
+# ── 1. Install CLI (delegate to cli/install.sh) ─────────────────
+if $INSTALL_CLI; then
+  info "installing CLI..."
+  # When run from inside a checked-out tree, prefer the local script
+  # so dev installs don't hit the network. Falls back to the published
+  # script for curl-pipe-bash flows.
+  SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd 2>/dev/null || true)"
+  CLI_INSTALL=""
+  if [[ -n "$SELF_DIR" && -x "$SELF_DIR/cli/install.sh" ]]; then
+    CLI_INSTALL="$SELF_DIR/cli/install.sh"
+    info "using local $CLI_INSTALL"
+    bash "$CLI_INSTALL" --version "$WPX_VERSION"
+  else
+    info "fetching cli/install.sh from ${BRANCH}"
+    curl -fsSL "${GITHUB_RAW}/${BRANCH}/cli/install.sh" \
+      | bash -s -- --version "$WPX_VERSION"
+  fi
+  log "CLI installed"
 else
-    warn "docker: not found (optional — only needed with --search flag)"
+  info "skipping CLI (--app-only)"
 fi
 
-if command -v mkcert &>/dev/null; then
-    log "mkcert: found (for HTTPS)"
-else
-    warn "mkcert: not found — install: brew install mkcert nss"
+# ── 2. Install desktop app (macOS only) ─────────────────────────
+if $INSTALL_APP && [[ "$PLATFORM" == "macos" ]]; then
+  DMG="wpx-${VERSION_BARE}.dmg"
+  DMG_URL="${GITHUB_DL}/${WPX_VERSION}/${DMG}"
+  TMPDIR="$(mktemp -d)"
+  trap 'rm -rf "$TMPDIR"; for v in /Volumes/WPX*; do [ -d "$v" ] && hdiutil detach "$v" -quiet -force 2>/dev/null || true; done' EXIT
+
+  info "downloading ${DMG}..."
+  curl -fSL --progress-bar -o "$TMPDIR/$DMG" "$DMG_URL" \
+    || fail "DMG download failed (${DMG_URL}) — does this release have a desktop build?"
+
+  info "mounting..."
+  MOUNT="$(hdiutil attach -nobrowse -quiet "$TMPDIR/$DMG" \
+            | awk '/\/Volumes\//{$1=$2=""; sub(/^[[:space:]]+/,""); print; exit}')"
+  [[ -d "$MOUNT" ]] || fail "could not mount $DMG"
+
+  APP_SRC="$MOUNT/wpx.app"
+  [[ -d "$APP_SRC" ]] || fail "wpx.app missing inside DMG"
+
+  APP_DEST="/Applications/wpx.app"
+  if [[ -d "$APP_DEST" ]]; then
+    info "removing existing $APP_DEST..."
+    rm -rf "$APP_DEST"
+  fi
+  info "copying to /Applications..."
+  cp -R "$APP_SRC" "$APP_DEST"
+
+  info "ejecting..."
+  hdiutil detach "$MOUNT" -quiet || true
+
+  # Strip the macOS quarantine attribute so the user doesn't get a
+  # "downloaded from internet" warning on first launch. Signed
+  # releases don't strictly need this; unsigned dev builds do.
+  xattr -dr com.apple.quarantine "$APP_DEST" 2>/dev/null || true
+
+  log "App installed at $APP_DEST"
+elif $INSTALL_APP && [[ "$PLATFORM" != "macos" ]]; then
+  warn "desktop app is macOS-only for now; skipping"
 fi
 
-# PHP extension shared library dependencies (macOS only)
-if [[ "$GOOS" == "darwin" ]]; then
-    EXT_DEPS_MISSING=()
-    for pkg in libyaml imagemagick libmemcached zlib; do
-        if brew list --formula "$pkg" &>/dev/null; then
-            log "$pkg: found"
-        else
-            EXT_DEPS_MISSING+=("$pkg")
-        fi
-    done
-    if [[ ${#EXT_DEPS_MISSING[@]} -gt 0 ]]; then
-        warn "missing PHP extension dependencies: ${EXT_DEPS_MISSING[*]}"
-        info "installing: brew install ${EXT_DEPS_MISSING[*]}"
-        brew install "${EXT_DEPS_MISSING[@]}" || warn "brew install failed — some PHP extensions may not load"
-    fi
+printf "\n${GREEN}${BOLD}done${NC}\n"
+if $INSTALL_CLI; then
+  echo "  • wpx        $(command -v wpx 2>/dev/null || echo 'not on PATH — restart your shell')"
 fi
-
-# ── 3. Resolve version ───────────────────────────────────────
-header "[3/8] Resolve version"
-
-VERSION="${WPX_VERSION:-}"
-
-if [[ -z "$VERSION" ]]; then
-    info "fetching latest release..."
-    VERSION=$(curl -fsSL "${GITHUB_API}/releases?per_page=1" \
-        | grep '"tag_name"' \
-        | head -1 \
-        | sed -E 's/.*"([^"]+)".*/\1/') || true
-    [[ -n "$VERSION" ]] || fail "no releases found — check ${GITHUB_API}/releases"
+if $INSTALL_APP && [[ "$PLATFORM" == "macos" ]]; then
+  echo "  • Desktop    open -a wpx"
 fi
-
-# Ensure version starts with v
-[[ "$VERSION" == v* ]] || VERSION="v${VERSION}"
-
-log "version: $VERSION"
-
-# ── 4. Download ──────────────────────────────────────────────
-header "[4/8] Download"
-
-TMPDIR=$(mktemp -d /tmp/wpx-install.XXXXXX)
-trap "rm -rf '$TMPDIR'" EXIT
-
-TARBALL="wpx-${VERSION}-${GOOS}-${GOARCH}.tar.gz"
-TARBALL_URL="${GITHUB_DL}/${VERSION}/${TARBALL}"
-CHECKSUM_URL="${TARBALL_URL}.sha256"
-
-info "downloading ${TARBALL}..."
-curl -fSL --progress-bar -o "${TMPDIR}/${TARBALL}" "${TARBALL_URL}" \
-    || fail "download failed — check version exists: ${TARBALL_URL}"
-
-info "downloading checksum..."
-curl -fsSL -o "${TMPDIR}/${TARBALL}.sha256" "${CHECKSUM_URL}" \
-    || fail "checksum download failed"
-
-info "verifying checksum..."
-(cd "$TMPDIR" && shasum -a 256 -c "${TARBALL}.sha256") \
-    || fail "checksum verification failed — file may be corrupted"
-log "checksum OK"
-
-info "extracting..."
-tar xzf "${TMPDIR}/${TARBALL}" -C "${TMPDIR}"
-[[ -f "${TMPDIR}/wpx" ]] || fail "tarball did not contain wpx binary"
-log "extracted wpx binary"
-
-# ── 5. Install binary ────────────────────────────────────────
-header "[5/8] Install binary"
-
-info "installing to $INSTALL_DIR/wpx..."
-echo "  (requires sudo — enter your password if prompted)"
-
-# Cache sudo for this session
-if ! sudo -n true 2>/dev/null; then
-    sudo -v || fail "sudo authentication failed"
-fi
-
-# Keep sudo alive in background for the rest of the script
-( while true; do sudo -n true; sleep 50; done ) &
-SUDO_KEEPALIVE_PID=$!
-# Update trap to clean both tmpdir and sudo keepalive
-trap "rm -rf '$TMPDIR'; kill $SUDO_KEEPALIVE_PID 2>/dev/null" EXIT
-
-sudo mkdir -p "$INSTALL_DIR"
-sudo cp "${TMPDIR}/wpx" "$INSTALL_DIR/wpx"
-sudo chmod 755 "$INSTALL_DIR/wpx"
-sudo chown "$(id -u):$(id -g)" "$INSTALL_DIR/wpx"
-
-# Clear quarantine + re-sign (macOS only)
-if [[ "$GOOS" == "darwin" ]]; then
-    sudo xattr -cr "$INSTALL_DIR/wpx" 2>/dev/null || true
-    sudo codesign -s - -f "$INSTALL_DIR/wpx" 2>/dev/null || true
-fi
-
-# Verify binary runs
-if "$INSTALL_DIR/wpx" version &>/dev/null; then
-    log "installed: $INSTALL_DIR/wpx ($VERSION)"
-else
-    warn "binary installed but 'wpx version' failed"
-    warn "try: sudo xattr -cr $INSTALL_DIR/wpx"
-fi
-
-# ── 6. Directory structure & permissions ──────────────────────
-header "[6/8] Directory structure"
-
-dirs=(
-    "$WPX_HOME"
-    "$WPX_HOME/bin"
-    "$WPX_HOME/cache"
-    "$WPX_HOME/cache/php-ext"
-    "$WPX_HOME/certs"
-    "$WPX_HOME/locks"
-    "$WPX_HOME/logs"
-    "$WPX_HOME/proxy"
-    "$WPX_HOME/proxy/conf.d"
-    "$WPX_HOME/proxy/logs"
-    "$WPX_HOME/proxy/temp"
-    "$WPX_SITES"
-)
-
-for d in "${dirs[@]}"; do
-    mkdir -p "$d"
-    chmod 755 "$d"
-done
-
-# Init wpx (writes config.json, registry.json)
-"$INSTALL_DIR/wpx" init 2>/dev/null || true
-
-log "state: $WPX_HOME"
-log "sites: $WPX_SITES"
-
-# Permission audit
-
-check_perm() {
-    local path="$1" want="$2" label="$3"
-    if [[ ! -e "$path" ]]; then
-        warn "$label: $path does not exist"
-        return
-    fi
-    actual=$(stat -f "%Lp" "$path" 2>/dev/null || stat -c "%a" "$path" 2>/dev/null)
-    if [[ "$actual" == "$want" ]]; then
-        log "$label: $path ($actual)"
-    else
-        warn "$label: $path is $actual, fixing to $want"
-        chmod "$want" "$path"
-    fi
-}
-
-check_perm "$WPX_HOME"          "755" "wpx home"
-check_perm "$WPX_HOME/bin"      "755" "binaries"
-check_perm "$WPX_HOME/cache"    "755" "cache"
-check_perm "$WPX_HOME/certs"    "755" "certs"
-check_perm "$WPX_HOME/locks"    "755" "locks"
-check_perm "$WPX_HOME/logs"     "755" "logs"
-check_perm "$WPX_HOME/proxy"    "755" "proxy"
-check_perm "$WPX_SITES"         "755" "sites"
-
-# /etc/hosts
-if [[ -r /etc/hosts ]]; then
-    log "/etc/hosts: readable"
-else
-    warn "/etc/hosts: not readable"
-fi
-
-if sudo -n test -w /etc/hosts 2>/dev/null; then
-    log "/etc/hosts: writable (via sudo)"
-else
-    warn "/etc/hosts: sudo write will prompt each time"
-fi
-
-# ── 7. Port check ────────────────────────────────────────────
-header "[7/8] Port check (80 & 443)"
-
-check_port() {
-    local port=$1
-    local pids
-    pids=$(lsof -ti "tcp:$port" -sTCP:LISTEN 2>/dev/null || true)
-
-    if [[ -z "$pids" ]]; then
-        log "port $port: free"
-        return
-    fi
-
-    for pid in $pids; do
-        local cmd
-        cmd=$(ps -p "$pid" -o command= 2>/dev/null | head -c 80)
-
-        # Check if it's our own proxy nginx
-        if echo "$cmd" | grep -q "$WPX_HOME/proxy"; then
-            log "port $port: wpx proxy (pid $pid)"
-        elif echo "$cmd" | grep -q "nginx.*wpx"; then
-            log "port $port: wpx nginx (pid $pid)"
-        else
-            warn "port $port: OCCUPIED by pid $pid"
-            warn "  $cmd"
-
-            if echo "$cmd" | grep -qi "httpd\|apache"; then
-                warn "  fix: sudo apachectl stop"
-                warn "  permanent: sudo launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist"
-            elif echo "$cmd" | grep -qi "caddy"; then
-                warn "  fix: brew services stop caddy"
-            elif echo "$cmd" | grep -qi "nginx"; then
-                warn "  fix: sudo nginx -s stop  (or: brew services stop nginx)"
-            fi
-        fi
-    done
-}
-
-check_port 80
-check_port 443
-
-# ── 8. SSL / mkcert ──────────────────────────────────────────
-header "[8/8] SSL setup"
-
-if command -v mkcert &>/dev/null; then
-    info "installing local CA (may prompt for password)..."
-    mkcert -install 2>/dev/null && log "local CA installed" || warn "mkcert -install failed"
-else
-    warn "mkcert not installed — sites will use HTTP only"
-    warn "install: brew install mkcert nss && mkcert -install"
-fi
-
-# ── Shell integration ─────────────────────────────────────
-header "Shell integration"
-
-CURRENT_SHELL="$(basename "${SHELL:-/bin/zsh}")"
-
-add_to_rc() {
-    local rc="$1" content="$2" marker="$3"
-    [[ -f "$rc" ]] || return
-    if grep -qF "$marker" "$rc" 2>/dev/null; then
-        return
-    fi
-    printf "\n%s\n" "$content" >> "$rc"
-    log "updated $rc"
-}
-
-SHELL_BLOCK='# wpx
-export PATH="/usr/local/bin:$PATH"'
-
-case "$CURRENT_SHELL" in
-    zsh)
-        add_to_rc "$HOME/.zshrc" "$SHELL_BLOCK"$'\n''eval "$(wpx completion zsh)"' "# wpx"
-        log "zsh: completion added to ~/.zshrc"
-        ;;
-    bash)
-        add_to_rc "$HOME/.bashrc" "$SHELL_BLOCK"$'\n''eval "$(wpx completion bash)"' "# wpx"
-        add_to_rc "$HOME/.bash_profile" 'test -f ~/.bashrc && source ~/.bashrc' ".bashrc"
-        log "bash: completion added to ~/.bashrc"
-        ;;
-    *)
-        warn "unknown shell ($CURRENT_SHELL) — add to PATH manually"
-        ;;
-esac
-
-# ── Doctor ────────────────────────────────────────────────────
-header "Doctor"
-"$INSTALL_DIR/wpx" doctor 2>&1 || true
-
-# ── Summary ───────────────────────────────────────────────────
-header "Done!"
-echo ""
-echo "  wpx create mysite              # create a WordPress site (~12s)"
-echo "  wpx create vip --vip           # VIP Go (memcached; pass --search for ES)"
-echo "  wpx list                       # list sites"
-echo "  wpx doctor                     # check system health"
-echo ""
-echo "  Reload your shell:  source ~/.${CURRENT_SHELL}rc"
-echo ""
+echo "  • Update     wpx self-update"

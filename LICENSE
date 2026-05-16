@@ -1,0 +1,87 @@
+wpx — Proprietary Software Licence
+==================================
+
+Copyright (c) 2026 Akash Aman. All rights reserved.
+
+This software, together with its source code, binaries, design assets,
+documentation, and any associated files (collectively the "Software"),
+is the exclusive property of Akash Aman ("the Licensor"). It is
+provided to you ("the Licensee") under the terms of this Licence.
+
+1. GRANT OF LIMITED USE LICENCE
+   Subject to the terms below, the Licensor grants the Licensee a
+   personal, non-exclusive, non-transferable, revocable licence to
+   download, install, and run the published binary distributions of
+   the Software (the "Binary") on devices the Licensee owns or
+   controls, solely for the Licensee's own internal use.
+
+2. RESTRICTIONS
+   The Licensee shall NOT, and shall not permit any third party to:
+
+   (a) copy, modify, adapt, translate, port, or create derivative
+       works of the Software or any part of it;
+   (b) reverse engineer, decompile, disassemble, or otherwise attempt
+       to derive the source code, structure, or organisation of the
+       Binary, except to the extent such activity is expressly
+       permitted by applicable law notwithstanding this limitation;
+   (c) distribute, sublicense, sell, rent, lease, lend, host, or
+       otherwise transfer the Software, in whole or in part, to any
+       third party, whether for charge or free of charge;
+   (d) remove, obscure, or alter any proprietary notices, marks, or
+       labels on the Software;
+   (e) use the Software, in whole or in part, to develop a product
+       that competes with the Software;
+   (f) publish, mirror, or re-host the source code or any portion of
+       it, including via public version-control services, package
+       registries, content delivery networks, or AI training datasets.
+
+3. SOURCE CODE
+   No grant of rights to the source code is made by this Licence.
+   The source code is confidential and proprietary to the Licensor
+   and is not part of the distribution covered by Section 1.
+
+4. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT
+   WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+   LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+   PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. THE LICENSEE
+   ASSUMES ALL RISK ARISING OUT OF THE USE OR PERFORMANCE OF THE
+   SOFTWARE.
+
+5. LIMITATION OF LIABILITY
+   TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT
+   SHALL THE LICENSOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+   SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES (INCLUDING, BUT NOT
+   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+   USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+   AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+   ANY WAY OUT OF THE USE OF THE SOFTWARE, EVEN IF ADVISED OF THE
+   POSSIBILITY OF SUCH DAMAGE.
+
+6. TERMINATION
+   This Licence is effective until terminated. The Licensee's rights
+   under this Licence will terminate automatically and without notice
+   from the Licensor if the Licensee fails to comply with any term of
+   this Licence. Upon termination, the Licensee shall cease all use
+   of the Software and destroy all copies of the Software in its
+   possession or control.
+
+7. GOVERNING LAW
+   This Licence shall be governed by and construed in accordance
+   with the laws of India, without regard to its conflict-of-law
+   provisions. Any dispute arising under or in connection with this
+   Licence shall be subject to the exclusive jurisdiction of the
+   courts located in the Licensor's place of residence.
+
+8. ENTIRE AGREEMENT
+   This Licence constitutes the entire agreement between the parties
+   with respect to the use of the Software and supersedes all prior
+   or contemporaneous understandings, communications, and proposals,
+   whether oral or written, between the parties.
+
+For commercial licensing, redistribution rights, source code access,
+or any use not covered by this Licence, please contact the Licensor
+at sir.akashaman@gmail.com.
+
+— END OF LICENCE —

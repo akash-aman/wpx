@@ -1,241 +1,261 @@
-# wpx
+# 🌐 wpx
 
-Native WordPress development environment for macOS and Linux. Zero Docker, zero VMs — runs nginx, PHP-FPM, MySQL/MariaDB, Redis/Memcached, Mailpit, and more as native processes. Create a fully working WordPress site in ~12 seconds.
+Native WordPress development environments for macOS — plus a desktop GUI
+that drives them and an MCP server that lets your AI assistant operate
+them too. Zero Docker for the core stack: nginx, PHP-FPM, MySQL /
+MariaDB / SQLite, Redis / Memcached, and Mailpit run directly on the
+host. Elasticsearch is the one opt-in Docker dependency.
+
+Made with ❤️ by [Akash Aman](https://linktr.ee/akash_aman)
+
+[![Patreon](https://img.shields.io/badge/Patreon-support-orange)](https://www.patreon.com/akashaman)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-yellow)](https://www.buymeacoffee.com/akashaman)
+[![Hire Me](https://img.shields.io/badge/Hire%20Me-email-blue)](mailto:sir.akashaman@gmail.com)
+
+---
+
+## Overview
+
+`wpx` lets you spin up a fully-configured local WordPress site in
+about 12 seconds:
+
+```bash
+wpx create mysite                          # → https://mysite.wpx
+wpx create vipsite --vip                   # → VIP Go w/ memcached + ES
+wpx create shop --domain myshop.dev        # → custom domain
+```
+
+Every site gets its own `nginx + php-fpm + database + cache` quartet,
+mkcert-issued HTTPS, a reverse proxy on :80/:443, and lifecycle
+commands that survive reboots. The desktop app puts the same surface
+behind a point-and-click GUI; the MCP server lets you drive all of it
+from any AI client that speaks Model Context Protocol.
+
+## ✨ Key Features
+
+| Capability            | Description                                                                        |
+|-----------------------|------------------------------------------------------------------------------------|
+| Create site           | One command → full WordPress install with HTTPS in ~12 s                            |
+| Multi-stack           | PHP versions, MySQL / MariaDB / SQLite, Redis / Memcached, multisite + VIP support |
+| HTTPS via mkcert      | Locally-trusted certificates per site, no browser warnings                          |
+| Reverse proxy         | One nginx on :80/:443 routes every `*.wpx` hostname to its site                    |
+| Pull from production  | 3-step wizard: import dump → confirm domain mappings → search-replace + reproxy    |
+| Site lifecycle        | `start` / `stop` / `restart` / `reload` (whole stack or per-service)                |
+| Doctor                | Preflight + auto-fix for ports, hosts, mkcert, binaries, disk, proxy               |
+| Orphans               | Detect & clean leftover processes / files from previous runs                        |
+| Notifications drawer  | Replay every toast surfaced this session (`🔔` in the topbar of the desktop app)    |
+| ⌘K Command palette    | Fuzzy navigate + run actions across sites, pages, tabs                              |
+| MCP integration       | 54+ tools for VS Code, Cursor, Claude Desktop                                       |
+| Self-update           | `wpx self-update` upgrades CLI **and** desktop app in one command                   |
+
+## 🛠️ MCP Tools
+
+<!-- MCP_TOOLS_START -->
+
+Every wpx capability is exposed as an MCP tool — **54 tools across 17 categories**. Drop the JSON snippet from the in-app dialog (`⌘K → mcp`) into your client's config and the tools below light up automatically.
+
+#### Cache
+
+| Tool | Description |
+|------|-------------|
+| `cache_flush` | Flush the object cache (Redis or Memcached) for a site. |
+
+#### Database
+
+| Tool | Description |
+|------|-------------|
+| `db_export` | Export a site's database to a SQL file. Returns the output file path. |
+| `db_import` | Import a SQL dump into a site's database. Supports .sql and .sql.gz files. |
+| `db_query` | Run a SQL query directly against a site's MySQL/MariaDB database. Bypasses wp-cli and VIP restrictions. Returns tab-separated results. |
+
+#### Diagnostics
+
+| Tool | Description |
+|------|-------------|
+| `doctor` | Run preflight/health checks. |
+| `logs_read` | Read recent log entries for a site. |
+| `orphans_check` | Detect stale PIDs, orphan processes, port conflicts. |
+| `pull` | Import production database and rewire domains. |
+| `upgrade_config` | Backfill missing .wpx.json fields and regenerate configs. |
+
+#### Domains
+
+| Tool | Description |
+|------|-------------|
+| `domain_add` | Map a domain to a multisite. Adds proxy config, /etc/hosts entry, and SSL certificate. |
+| `domain_remove` | Remove a domain mapping from a multisite. |
+| `domain_list` | List all domains mapped to a multisite. |
+
+#### Meta
+
+| Tool | Description |
+|------|-------------|
+| `help_discover` | Discover wpx commands, subcommands, and flags by running --help. Use this when you need to find exact flag names or available subcommands. Examples: command='create', command='db import', command='domain'. |
+
+#### Site lifecycle
+
+| Tool | Description |
+|------|-------------|
+| `site_create` | Create a new WordPress site with the specified stack. Returns site details including URLs and ports. |
+| `site_destroy` | Destroy a WordPress site — stops services, removes files, cleans hosts and proxy. |
+| `site_start` | Start all or a specific service for a site. |
+| `site_stop` | Stop all or a specific service for a site. |
+| `site_restart` | Restart all or a specific service for a site. |
+| `site_reload` | Graceful reload (SIGHUP/SIGUSR2) for all or a specific service. |
+| `site_apply` | Regenerate all config files from .wpx.json and reload services. |
+
+#### Plugins (wp-cli)
+
+| Tool | Description |
+|------|-------------|
+| `plugin_list` | List all installed plugins for a site with status, version, and update info. |
+| `plugin_install` | Install a WordPress plugin from the plugin directory or a URL. |
+| `plugin_activate` | Activate an installed WordPress plugin. |
+| `plugin_deactivate` | Deactivate an active WordPress plugin. |
+
+#### Plugins (DB-direct)
+
+| Tool | Description |
+|------|-------------|
+| `plugin_db_list` | List all plugins from filesystem + DB status. Works even when the site has a fatal PHP error. Shows active/network-active/inactive status by reading directly from the database. |
+| `plugin_db_toggle` | Enable or disable one or more plugins via direct DB manipulation. Accepts comma-separated plugin paths for batch operations. Single DB read + single DB write. Bypasses wp-cli and PHP. |
+| `plugin_db_disable_all` | Emergency: disable ALL plugins via DB. Use when a site is completely broken by a plugin fatal error. |
+| `plugin_db_enable_all` | Enable ALL plugins found on disk via DB. Scans wp-content/plugins/ and activates every discovered plugin. |
+
+#### Reverse proxy
+
+| Tool | Description |
+|------|-------------|
+| `proxy_start` | Start the global reverse proxy (ports 80/443). |
+| `proxy_stop` | Stop the global reverse proxy. |
+| `proxy_reload` | Reload the global reverse proxy configuration. |
+| `proxy_status` | Show proxy status and ports. |
+| `proxy_clean` | Remove orphaned proxy configs for destroyed sites. |
+
+#### Pull from production
+
+| Tool | Description |
+|------|-------------|
+| `pull_detect` | Detect all production domains in a site's database and propose local domain mappings. Returns JSON with proposed from/to pairs for each blog in the multisite. Use before pull_execute to let the user review and adjust mappings. |
+| `pull_execute` | Execute domain migration: updates wp_blogs, runs search-replace per mapping, adds proxy entries, reports hosts to add. Pass the mappings JSON from pull_detect (modified if needed). Use quick=true for Go-based parallel search-replace (faster, bypasses WP-CLI). |
+| `hosts_add` | Add /etc/hosts entries for a site. Auto-discovers all domains: primary for single sites, primary + subsite domains for subdomain multisites. Skips existing entries. Requires sudo. |
+
+#### Database — search / replace
+
+| Tool | Description |
+|------|-------------|
+| `search_replace` | Run a search-replace across all WordPress tables. Handles serialized data safely. |
+
+#### Site management
+
+| Tool | Description |
+|------|-------------|
+| `site_list` | List all wpx-managed WordPress sites with their domains, ports, and status. |
+| `site_info` | Show detailed configuration for a site: stack versions, ports, paths, features. Access the site via the domain URL (e.g. https://domain.test/) — do NOT use localhost:<port>. The ports object shows internal backend ports for direct DB/Redis connections only; the wpx proxy routes HTTP/HTTPS on standard ports 80/443. |
+| `site_open` | Get the URL for a site or one of its services (does not open a browser). |
+| `site_env` | Get environment variables for a site's shell (PHP path, socket paths, etc.). |
+| `version` | Print the wpx version. |
+| `wpx_init` | Initialize the wpx global directory (~/.wpx/) and local CA for HTTPS. |
+
+#### Themes (wp-cli)
+
+| Tool | Description |
+|------|-------------|
+| `theme_list` | List all installed themes for a site. |
+| `theme_install` | Install a WordPress theme from the theme directory or a URL. |
+| `theme_activate` | Activate an installed WordPress theme. |
+
+#### Themes (DB-direct)
+
+| Tool | Description |
+|------|-------------|
+| `theme_db_list` | List all themes from filesystem + active status from DB. Works even when the site has a fatal PHP error. |
+| `theme_db_switch` | Switch the active theme via direct DB update. Bypasses wp-cli and PHP — works even when the site is broken. |
+
+#### WordPress users
+
+| Tool | Description |
+|------|-------------|
+| `user_create` | Create a WordPress user. |
+| `user_list` | List all WordPress users for a site. |
+
+#### WP-CLI passthrough
+
+| Tool | Description |
+|------|-------------|
+| `wp_run` | Execute any WP-CLI command against a site. Examples: 'plugin list', 'option get siteurl', 'cache flush', 'db query \ |
+
+#### Xdebug
+
+| Tool | Description |
+|------|-------------|
+| `xdebug_on` | Enable Xdebug for a site. Returns IDE configuration. |
+| `xdebug_off` | Disable Xdebug for a site. |
+| `xdebug_status` | Check Xdebug status for a site. |
+
+<!-- MCP_TOOLS_END -->
+
+## 📖 Documentation
+
+| Doc | What's in it |
+|---|---|
+| [docs/cli.md](docs/cli.md) | Full CLI command reference — every subcommand, every flag, real examples |
+| [docs/architecture.md](docs/architecture.md) | Stack, on-disk layout, process model, port allocation strategy |
 
 ## Install
+
+The umbrella installer drops both the CLI binary and (on macOS) the
+desktop app in one go:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/akash-aman/wpx/main/install.sh | bash
 ```
 
-Pin a specific version:
+Flags:
+
+| Flag                  | Effect                                       |
+|-----------------------|----------------------------------------------|
+| `--version vX.Y.Z`    | Pin a specific release                       |
+| `--cli-only`          | Install only the CLI binary                  |
+| `--app-only`          | Install only the desktop app (macOS only)    |
+
+After install:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/akash-aman/wpx/main/install.sh | bash -s -- --version v0.1.0
+wpx --help                # full CLI surface
+wpx self-update --check   # is a newer release available?
+wpx self-update           # upgrade both CLI + app
+open -a wpx               # launch the desktop app
 ```
 
-### Requirements
+> [!NOTE]
+> wpx currently targets **macOS only** (Apple Silicon + Intel).
+> Linux and Windows support is on the roadmap.
 
-- **macOS** (arm64) or **Linux** (amd64)
-- Optional: `mkcert` for HTTPS — `brew install mkcert nss`
-- Optional: Docker for Elasticsearch — `--search` flag
+## 🤝 Contributing
 
-## Uninstall
+This repository is the **public release distribution**. Source code,
+issues, and pull requests live in the private codebase repo — please
+reach out at <sir.akashaman@gmail.com> if you'd like access.
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/akash-aman/wpx/main/uninstall.sh | bash
-```
+## 🔒 Security
 
-## Quick start
+By participating you agree to abide by the
+[Code of Conduct](CODE_OF_CONDUCT.md). Found a security issue?
+Please follow the responsible-disclosure process in
+[SECURITY.md](SECURITY.md) — do **not** open a public issue.
 
-```bash
-wpx create mysite                        # WordPress site (~12s)
-wpx create mysite --php=8.3              # specific PHP version
-wpx create mysite --db=mariadb           # MariaDB instead of MySQL
-wpx create mysite --cache=redis          # Redis object cache (default)
-wpx create mysite --cache=memcached      # Memcached object cache
-wpx create mysite --cache=none           # no object cache
-wpx create mysite --db=sqlite            # SQLite (no DB server)
-wpx create mysite --multisite            # WordPress multisite (subdirectory)
-wpx create mysite --multisite --multisite-subdomains  # multisite (subdomains)
-wpx create mysite --domain=mysite.dev    # custom domain
-wpx create mysite --repo=git@...        # clone repo as wp-content/
-wpx create vipsite --vip                 # VIP Go stack (memcached)
-wpx create vipsite --vip --search        # VIP Go + Elasticsearch
-```
+## 📝 License
 
-## Commands
+This project is **proprietary** — see [LICENSE](LICENSE) for the full
+terms. The published binaries are licensed for personal, internal use
+only; redistribution, modification, and re-publishing of the source
+are not permitted. For commercial licensing or source-code access
+contact <sir.akashaman@gmail.com>.
 
-### Site lifecycle
+[![Patreon](https://img.shields.io/badge/Patreon-support-orange)](https://www.patreon.com/akashaman)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-yellow)](https://www.buymeacoffee.com/akashaman)
+[![Hire Me](https://img.shields.io/badge/Hire%20Me-email-blue)](mailto:sir.akashaman@gmail.com)
 
-```bash
-wpx create <site>                    # create a new WordPress site
-wpx create <site> --no-tui           # plain text output (no interactive TUI)
-wpx start <site>                     # start all services
-wpx start <site> [service]           # start a single service (nginx, php-fpm, mysql, etc.)
-wpx start --all                      # start all sites
-wpx stop <site>                      # stop all services
-wpx stop <site> [service]            # stop a single service
-wpx stop --all                       # stop all sites
-wpx restart <site>                   # restart all services
-wpx restart <site> [service]         # restart a single service
-wpx restart --all                    # restart all sites
-wpx reload <site>                    # graceful reload (SIGHUP/SIGUSR2)
-wpx reload <site> [service]          # reload a single service
-wpx reload --all                     # reload all sites
-wpx destroy <site> --force           # stop + delete site files
-wpx destroy --all --force            # destroy everything
-```
+### Made with ❤️ by [Akash Aman](https://linktr.ee/akash_aman)
 
-#### Create flags
-
-| Flag | Default | Description |
-|---|---|---|
-| `--php` | latest | PHP version (e.g. 8.3, 8.5) |
-| `--db` | mysql | Database engine: `mysql`, `mariadb`, `sqlite` |
-| `--db-version` | latest | Database version (e.g. 8.4, 11.4.4, 10.6) |
-| `--cache` | redis | Cache backend: `redis`, `memcached`, `none` |
-| `--cache-version` | latest | Cache version (e.g. 8.6.2, 1.6.41) |
-| `--nginx-version` | latest | Nginx version |
-| `--domain` | `<name>.test` | Custom site domain |
-| `--multisite` | false | Enable WordPress multisite (subdirectory) |
-| `--multisite-subdomains` | false | Use subdomain multisite instead |
-| `--vip` | false | VIP Go layout + mu-plugins (forces memcached) |
-| `--search` | false | Enable Elasticsearch (Docker) |
-| `--ssl` | true | HTTPS via mkcert |
-| `--mail` | true | Enable Mailpit (SMTP + web UI) |
-| `--repo` | — | Git repo URL to clone as `wp-content/` |
-| `--wp-version` | latest | WordPress version |
-| `--admin-user` | admin | WordPress admin username |
-| `--admin-pass` | admin | WordPress admin password |
-| `--admin-email` | admin@example.com | WordPress admin email |
-| `--tools` | — | Comma-separated: `adminer,xdebug,query-monitor,error-pages,cache-admin` |
-| `--no-tui` | false | Disable interactive TUI |
-
-### Site management
-
-```bash
-wpx list                             # list all sites with status
-wpx info <site>                      # show site details (ports, paths, versions)
-wpx open <site>                      # open site in browser
-wpx open <site> admin                # open wp-admin
-wpx open <site> mail                 # open Mailpit UI
-wpx open <site> db                   # open Adminer
-wpx logs <site>                      # tail aggregated logs
-wpx logs <site> -f                   # follow log output
-wpx shell <site>                     # subshell with site env (php, wp, mysql in PATH)
-wpx shell <site> --rc                # also source ~/.zshrc or ~/.bashrc
-wpx env <site>                       # print shell exports (use with: eval $(wpx env mysite))
-wpx apply <site>                     # regenerate all configs from .wpx.json and reload
-```
-
-### WordPress & database
-
-```bash
-wpx wp <site> <command>              # run WP-CLI commands
-wpx db export <site>                 # export database to SQL file
-wpx db export <site> output.sql      # export to specific file
-wpx db import <site> dump.sql        # import database
-wpx db import <site> dump.sql.gz     # import gzip-compressed dump
-wpx db import <site> dump.sql --quick   # fast import (disable checks, 3-5x speed)
-wpx db import <site> dump.sql --turbo   # fastest (strip indexes, import, rebuild)
-wpx search-replace <site> <old> <new>   # search-replace across all tables
-wpx search-replace <site> <old> <new> --dry-run     # count matches without modifying
-wpx search-replace <site> <old> <new> --prefix=wp_2_ # filter by table prefix
-wpx search-replace <site> <old> <new> --workers=16   # parallel workers (default 8)
-wpx pull <site>                      # detect domains, propose search-replace, wire nginx/hosts/SSL
-wpx pull <site> --quick              # Go-native parallel search-replace (faster)
-```
-
-### Domain & multisite
-
-```bash
-wpx domain add <site> <domain>                 # add a domain
-wpx domain add <site> <domain> --wildcard      # wildcard proxy + SSL (*.domain)
-wpx domain add <site> <domain> --title="Blog"  # set subsite title
-wpx domain add <site> <domain> --skip-create   # infrastructure only (skip WP subsite)
-wpx domain remove <site> <domain>              # remove a domain
-wpx domain list <site>                         # list domains
-```
-
-### Object cache
-
-```bash
-wpx cache flush <site>               # flush object cache (Redis or Memcached)
-```
-
-### Xdebug
-
-```bash
-wpx xdebug on <site>                # enable Xdebug
-wpx xdebug off <site>               # disable Xdebug
-wpx xdebug status <site>            # check status
-```
-
-### Proxy
-
-```bash
-wpx proxy start                     # start global reverse proxy (port 80/443)
-wpx proxy stop                      # stop proxy
-wpx proxy status                    # check proxy status
-wpx proxy reload                    # reload proxy config
-wpx proxy clean                     # remove orphan configs for destroyed sites
-```
-
-### System
-
-```bash
-wpx doctor                          # preflight checks (platform, ports, SSL, deps)
-wpx doctor --fix                    # auto-fix repairable issues
-wpx orphans                         # detect orphan processes and stale resources
-wpx orphans --fix                   # auto-clean orphans
-wpx version                         # print version
-wpx init                            # initialize ~/.wpx/ and local CA
-wpx upgrade-config <site>           # backfill new defaults into existing site config
-wpx upgrade-config --all            # upgrade all sites
-wpx completion zsh                  # generate zsh completions
-wpx completion bash                 # generate bash completions
-```
-
-## Stack
-
-Each site runs its own isolated set of native processes:
-
-| Service | Options | Default |
-|---|---|---|
-| Web server | nginx | nginx (latest) |
-| PHP | 8.0 – 8.5 | latest |
-| Database | MySQL, MariaDB, SQLite | MySQL (latest) |
-| Cache | Redis, Memcached, none | Redis |
-| Search | Elasticsearch (Docker) | disabled |
-| Mail | Mailpit | enabled |
-
-### Tools (auto-installed per site)
-
-| Tool | Description |
-|---|---|
-| Adminer | Database management UI |
-| Xdebug | Step debugger (toggle on/off) |
-| Query Monitor | WordPress performance profiler |
-| Pretty error pages | Custom nginx error pages |
-
-## Architecture
-
-```
-wpx create mysite
-     │
-     ├── ~/WPX Sites/mysite.test/
-     │    ├── wp/              # WordPress install
-     │    ├── conf/            # nginx, php-fpm, mysql configs
-     │    ├── data/            # mysql datadir, redis dump
-     │    ├── logs/            # per-service logs
-     │    ├── run/             # PID files
-     │    ├── sock/            # unix sockets (php-fpm, mysql)
-     │    └── .wpx.json        # site config
-     │
-     └── processes (native, per-user)
-          ├── nginx            → listens on allocated port
-          ├── php-fpm          → unix socket, daemonize=no
-          ├── mysqld/mariadbd  → unix socket + port
-          ├── redis/memcached  → port (if enabled)
-          └── mailpit          → SMTP + web UI ports
-```
-
-- **No Docker** (except optional Elasticsearch)
-- **No root daemons** — everything runs as your user
-- **No shared state** — each site is fully isolated
-- **Automatic port allocation** — no collisions between sites
-- **Dependency-aware startup** — topological sort ensures correct order
-
-## VIP Go
-
-```bash
-wpx create enterprise --vip              # memcached + VIP mu-plugins
-wpx create enterprise --vip --search     # + Elasticsearch (Docker)
-```
-
-The `--vip` flag enables memcached object cache and installs VIP Go mu-plugins. Elasticsearch is opt-in via `--search`.
-
-## License
-
-Proprietary. All rights reserved.
