@@ -1,3 +1,5 @@
+<div align="center">
+
 # 🌐 wpx
 
 Native WordPress development environments for macOS — plus a desktop GUI
@@ -6,11 +8,16 @@ them too. Zero Docker for the core stack: nginx, PHP-FPM, MySQL /
 MariaDB / SQLite, Redis / Memcached, and Mailpit run directly on the
 host. Elasticsearch is the one opt-in Docker dependency.
 
+
+
 Made with ❤️ by [Akash Aman](https://linktr.ee/akash_aman)
 
 [![Patreon](https://img.shields.io/badge/Patreon-support-orange)](https://www.patreon.com/akashaman)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-yellow)](https://www.buymeacoffee.com/akashaman)
 [![Hire Me](https://img.shields.io/badge/Hire%20Me-email-blue)](mailto:sir.akashaman@gmail.com)
+
+
+</div>
 
 ---
 
@@ -253,9 +260,13 @@ only; redistribution, modification, and re-publishing of the source
 are not permitted. For commercial licensing or source-code access
 contact <sir.akashaman@gmail.com>.
 
+
+<div align="center">
+
 [![Patreon](https://img.shields.io/badge/Patreon-support-orange)](https://www.patreon.com/akashaman)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-yellow)](https://www.buymeacoffee.com/akashaman)
 [![Hire Me](https://img.shields.io/badge/Hire%20Me-email-blue)](mailto:sir.akashaman@gmail.com)
 
 ### Made with ❤️ by [Akash Aman](https://linktr.ee/akash_aman)
 
+</div>
