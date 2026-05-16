@@ -237,8 +237,8 @@ open -a wpx               # launch the desktop app
 ```
 
 > [!NOTE]
-> wpx currently targets **macOS only** (Apple Silicon + Intel).
-> Linux and Windows support is on the roadmap.
+> wpx currently targets **macOS on Apple Silicon (arm64) only**.
+> Intel Macs, Linux, and Windows are on the roadmap.
 
 ## 🤝 Contributing
 
