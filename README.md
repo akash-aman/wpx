@@ -60,7 +60,7 @@ from any AI client that speaks Model Context Protocol.
 
 <!-- MCP_TOOLS_START -->
 
-Every wpx capability is exposed as an MCP tool — **54 tools across 17 categories**. Drop the JSON snippet from the in-app dialog (`⌘K → mcp`) into your client's config and the tools below light up automatically.
+Every wpx capability is exposed as an MCP tool — **55 tools across 18 categories**. Drop the JSON snippet from the in-app dialog (`⌘K → mcp`) into your client's config and the tools below light up automatically.
 
 #### Cache
 
@@ -122,10 +122,10 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 <tbody>
 <tr><td><code>site_create</code></td><td>Create a new WordPress site with the specified stack. Returns site details including URLs and ports.</td></tr>
 <tr><td><code>site_destroy</code></td><td>Destroy a WordPress site — stops services, removes files, cleans hosts and proxy.</td></tr>
-<tr><td><code>site_start</code></td><td>Start all or a specific service for a site.</td></tr>
-<tr><td><code>site_stop</code></td><td>Stop all or a specific service for a site.</td></tr>
-<tr><td><code>site_restart</code></td><td>Restart all or a specific service for a site.</td></tr>
-<tr><td><code>site_reload</code></td><td>Graceful reload (SIGHUP/SIGUSR2) for all or a specific service.</td></tr>
+<tr><td><code>site_start</code></td><td>Start a site. By default starts every service; pass `service` to start just one (nginx, php-fpm, mysql, mariadb, redis, memcached, mailpit, elasticsearch, …). Use services_list to discover which services exist on the site.</td></tr>
+<tr><td><code>site_stop</code></td><td>Stop a site. By default stops every service; pass `service` to stop just one.</td></tr>
+<tr><td><code>site_restart</code></td><td>Restart a site. By default restarts every service; pass `service` to restart just one.</td></tr>
+<tr><td><code>site_reload</code></td><td>Graceful reload (SIGHUP/SIGUSR2) of a site. By default reloads every service that supports it; pass `service` to reload just one.</td></tr>
 <tr><td><code>site_apply</code></td><td>Regenerate all config files from .wpx.json and reload services.</td></tr>
 </tbody>
 </table>
@@ -184,6 +184,15 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 <thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>search_replace</code></td><td>Run a search-replace across all WordPress tables. Handles serialized data safely.</td></tr>
+</tbody>
+</table>
+
+#### Services (status)
+
+<table>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
+<tbody>
+<tr><td><code>services_list</code></td><td>List every service for a site (nginx, php-fpm, mysql/mariadb, redis/memcached, mailpit, elasticsearch, …) with PID, port, version, uptime, memory, CPU, and config/log paths. Use this to see which services exist on a site before you target one with site_start / site_stop / site_restart / site_reload.</td></tr>
 </tbody>
 </table>
 
