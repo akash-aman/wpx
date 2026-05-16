@@ -98,7 +98,7 @@ if $INSTALL_CLI; then
   # When run from inside a checked-out tree, prefer the local script
   # so dev installs don't hit the network. Falls back to the published
   # script for curl-pipe-bash flows.
-  SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd 2>/dev/null || true)"
+  SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || true)"
   CLI_INSTALL=""
   if [[ -n "$SELF_DIR" && -x "$SELF_DIR/cli/install.sh" ]]; then
     CLI_INSTALL="$SELF_DIR/cli/install.sh"

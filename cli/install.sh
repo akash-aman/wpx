@@ -126,17 +126,21 @@ trap "rm -rf '$TMPDIR'" EXIT
 
 TARBALL="wpx-${VERSION}-${GOOS}-${GOARCH}.tar.gz"
 TARBALL_URL="${GITHUB_DL}/${VERSION}/${TARBALL}"
-CHECKSUM_URL="${TARBALL_URL}.sha256"
+CHECKSUM_URL="${GITHUB_DL}/${VERSION}/checksums.sha256"
 
 info "downloading ${TARBALL}..."
 curl -fSL --progress-bar -o "${TMPDIR}/${TARBALL}" "${TARBALL_URL}" \
     || fail "download failed — check version exists: ${TARBALL_URL}"
 
-info "downloading checksum..."
-curl -fsSL -o "${TMPDIR}/${TARBALL}.sha256" "${CHECKSUM_URL}" \
-    || fail "checksum download failed"
+info "downloading checksums..."
+curl -fsSL -o "${TMPDIR}/checksums.sha256" "${CHECKSUM_URL}" \
+    || fail "checksum download failed: ${CHECKSUM_URL}"
 
 info "verifying checksum..."
+# Pull just our tarball's line out of the consolidated checksums file
+# so `shasum -c` doesn't fail on unrelated artefacts (DMG, other archs).
+grep " ${TARBALL}\$" "${TMPDIR}/checksums.sha256" > "${TMPDIR}/${TARBALL}.sha256" \
+    || fail "no checksum entry for ${TARBALL} in checksums.sha256"
 (cd "$TMPDIR" && shasum -a 256 -c "${TARBALL}.sha256") \
     || fail "checksum verification failed — file may be corrupted"
 log "checksum OK"
