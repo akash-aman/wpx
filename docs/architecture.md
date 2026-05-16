@@ -19,7 +19,7 @@ Each site runs its own isolated set of native processes:
 | PHP         | 8.0 – 8.5                        | latest           |
 | Database    | MySQL · MariaDB · SQLite         | MySQL (latest)   |
 | Cache       | Redis · Memcached · none         | Redis            |
-| Search      | Elasticsearch (native, Docker optional) | disabled         |
+| Search      | Elasticsearch (native)           | disabled         |
 | Mail        | Mailpit                          | enabled          |
 
 ### Tools (auto-installed per site)
@@ -57,8 +57,8 @@ wpx create mysite
 ## Design properties
 
 - **No Docker required** — every service (including Elasticsearch)
-  runs natively. Docker is available as an opt-in runtime per service
-  via `--runtime docker` or per-service config.
+  runs natively. A Docker runtime is on the roadmap but not
+  currently supported.
 - **No root daemons** — every service runs as your unprivileged user.
   The only privileged operations are `/etc/hosts` mutations and
   binding to ports 80/443; both go through a single authenticated

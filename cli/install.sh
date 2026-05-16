@@ -106,12 +106,13 @@ if [[ "$GOOS" == "darwin" ]]; then
     done
 fi
 
-# Docker stays optional — wpx only uses it when the user explicitly
-# opts a service into the docker runtime.
+# Docker isn't used by current wpx (every service runs natively); a
+# Docker runtime is on the roadmap. We still log whether it's present
+# so future opt-in users don't see a surprise.
 if command -v docker &>/dev/null; then
-    log "docker: found (optional — services run natively by default, Docker is an opt-in runtime)"
+    log "docker: found (not used by current wpx; reserved for a future runtime)"
 else
-    warn "docker: not found (optional — install Docker Desktop only if you want the opt-in runtime)"
+    info "docker: not found (not required — wpx runs every service natively)"
 fi
 
 # ── 3. Resolve version ───────────────────────────────────────

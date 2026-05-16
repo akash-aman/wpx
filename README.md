@@ -4,10 +4,10 @@
 
 Native WordPress development environments for macOS — plus a desktop GUI
 that drives them and an MCP server that lets your AI assistant operate
-them too. Zero Docker required: nginx, PHP-FPM, MySQL / MariaDB /
-SQLite, Redis / Memcached, Mailpit, and Elasticsearch all run
-natively on the host (Docker stays available as an opt-in runtime
-for any of them).
+them too. Every service — nginx, PHP-FPM, MySQL / MariaDB / SQLite,
+Redis / Memcached, Mailpit, and Elasticsearch — runs natively on the
+host. No Docker required (a Docker runtime is on the roadmap, not
+currently supported).
 
 
 

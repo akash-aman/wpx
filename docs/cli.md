@@ -51,7 +51,7 @@ wpx destroy --all --force             # destroy every site
 | `--multisite` | false | Enable WordPress multisite (subdirectory) |
 | `--multisite-subdomains` | false | Use subdomain multisite instead |
 | `--vip` | false | VIP Go layout + mu-plugins (forces memcached) |
-| `--search` | false | Enable Elasticsearch (native; opt-in Docker runtime available) |
+| `--search` | false | Enable Elasticsearch (native) |
 | `--ssl` | true | HTTPS via mkcert |
 | `--mail` | true | Enable Mailpit (SMTP + web UI) |
 | `--repo` | — | Git repo URL to clone as `wp-content/` |
