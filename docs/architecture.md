@@ -19,7 +19,7 @@ Each site runs its own isolated set of native processes:
 | PHP         | 8.0 – 8.5                        | latest           |
 | Database    | MySQL · MariaDB · SQLite         | MySQL (latest)   |
 | Cache       | Redis · Memcached · none         | Redis            |
-| Search      | Elasticsearch (Docker)           | disabled         |
+| Search      | Elasticsearch (native, Docker optional) | disabled         |
 | Mail        | Mailpit                          | enabled          |
 
 ### Tools (auto-installed per site)
@@ -56,8 +56,9 @@ wpx create mysite
 
 ## Design properties
 
-- **No Docker** for the core stack (only Elasticsearch is opt-in
-  Dockerised, and only when you pass `--search`).
+- **No Docker required** — every service (including Elasticsearch)
+  runs natively. Docker is available as an opt-in runtime per service
+  via `--runtime docker` or per-service config.
 - **No root daemons** — every service runs as your unprivileged user.
   The only privileged operations are `/etc/hosts` mutations and
   binding to ports 80/443; both go through a single authenticated
@@ -92,7 +93,7 @@ hard-coded port numbers in the URL.
 
 ```bash
 wpx create enterprise --vip            # memcached + VIP mu-plugins
-wpx create enterprise --vip --search   # + Elasticsearch (Docker)
+wpx create enterprise --vip --search   # + Elasticsearch (native)
 ```
 
 The `--vip` flag enables the memcached object cache, copies the VIP

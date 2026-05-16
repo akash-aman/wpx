@@ -71,9 +71,9 @@ done
 
 # Optional deps
 if command -v docker &>/dev/null; then
-    log "docker: found (optional — for --search / Elasticsearch)"
+    log "docker: found (optional — services run natively by default, Docker is an opt-in runtime)"
 else
-    warn "docker: not found (optional — only needed with --search flag)"
+    warn "docker: not found (optional — services run natively; Docker is only needed if you opt in)"
 fi
 
 if command -v mkcert &>/dev/null; then
@@ -347,7 +347,7 @@ header "Doctor"
 header "Done!"
 echo ""
 echo "  wpx create mysite              # create a WordPress site (~12s)"
-echo "  wpx create vip --vip           # VIP Go (memcached; pass --search for ES)"
+echo "  wpx create vip --vip           # VIP Go (memcached + Elasticsearch, all native)"
 echo "  wpx list                       # list sites"
 echo "  wpx doctor                     # check system health"
 echo ""
