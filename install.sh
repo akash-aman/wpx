@@ -132,20 +132,25 @@ if $INSTALL_APP && [[ "$PLATFORM" == "macos" ]]; then
     || fail "DMG download failed (${DMG_URL}) — does this release have a desktop build?"
 
   info "mounting..."
-  # Parse the mount point from hdiutil's plist output instead of the
-  # human-readable table — the text format varies across macOS
-  # versions and gets suppressed entirely by `-quiet`. Pipe `yes`
-  # through stdin so any SLA prompt is auto-accepted.
-  PLIST="$(yes | hdiutil attach -nobrowse -noautoopen -plist "$TMPDIR/$DMG" 2>/dev/null)" \
+  # hdiutil's text output is fragile (gets suppressed by -quiet on some
+  # macOS versions). Use -plist mode and parse the result. PlistBuddy
+  # needs a real file, not stdin, so stage the plist on disk first.
+  PLIST_FILE="$TMPDIR/attach.plist"
+  yes | hdiutil attach -nobrowse -noautoopen -plist "$TMPDIR/$DMG" \
+        > "$PLIST_FILE" 2>/dev/null \
     || fail "hdiutil attach failed for $DMG"
-  MOUNT="$(printf '%s' "$PLIST" \
-            | /usr/libexec/PlistBuddy -c 'Print :system-entities' /dev/stdin 2>/dev/null \
-            | awk '/mount-point = /{sub(/^.*mount-point = /,""); print; exit}')"
+
+  MOUNT=""
+  for i in 0 1 2 3 4; do
+    MOUNT="$(/usr/libexec/PlistBuddy -c "Print :system-entities:$i:mount-point" "$PLIST_FILE" 2>/dev/null || true)"
+    [[ -n "$MOUNT" && -d "$MOUNT" ]] && break
+  done
+
   if [[ -z "$MOUNT" || ! -d "$MOUNT" ]]; then
-    # Fallback: scan /Volumes for a freshly-mounted wpx volume.
+    # Fallback: pick the freshest /Volumes/wpx* mount.
     MOUNT="$(ls -dt /Volumes/wpx* 2>/dev/null | head -n1)"
   fi
-  [[ -d "$MOUNT" ]] || fail "could not mount $DMG"
+  [[ -d "$MOUNT" ]] || fail "could not resolve DMG mount point"
   info "mounted at $MOUNT"
 
   APP_SRC="$MOUNT/wpx.app"

@@ -271,23 +271,38 @@ check_port() {
         local cmd
         cmd=$(ps -p "$pid" -o command= 2>/dev/null | head -c 80)
 
-        # Check if it's our own proxy nginx
+        # Check if it's our own proxy nginx (master shows full path)
         if echo "$cmd" | grep -q "$WPX_HOME/proxy"; then
             log "port $port: wpx proxy (pid $pid)"
+            continue
         elif echo "$cmd" | grep -q "nginx.*wpx"; then
             log "port $port: wpx nginx (pid $pid)"
-        else
-            warn "port $port: OCCUPIED by pid $pid"
-            warn "  $cmd"
+            continue
+        fi
 
-            if echo "$cmd" | grep -qi "httpd\|apache"; then
-                warn "  fix: sudo apachectl stop"
-                warn "  permanent: sudo launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist"
-            elif echo "$cmd" | grep -qi "caddy"; then
-                warn "  fix: brew services stop caddy"
-            elif echo "$cmd" | grep -qi "nginx"; then
-                warn "  fix: sudo nginx -s stop  (or: brew services stop nginx)"
+        # nginx workers don't carry the master's path in their cmdline -
+        # they just show "nginx: worker process". Walk up to the parent
+        # and treat it as ours if the master is wpx's.
+        if echo "$cmd" | grep -q "nginx: worker"; then
+            local ppid pcmd
+            ppid=$(ps -p "$pid" -o ppid= 2>/dev/null | tr -d ' ')
+            pcmd=$(ps -p "$ppid" -o command= 2>/dev/null | head -c 200)
+            if echo "$pcmd" | grep -q "$WPX_HOME/proxy\|nginx.*wpx"; then
+                # wpx-owned worker - skip silently to avoid spam
+                continue
             fi
+        fi
+
+        warn "port $port: OCCUPIED by pid $pid"
+        warn "  $cmd"
+
+        if echo "$cmd" | grep -qi "httpd\|apache"; then
+            warn "  fix: sudo apachectl stop"
+            warn "  permanent: sudo launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist"
+        elif echo "$cmd" | grep -qi "caddy"; then
+            warn "  fix: brew services stop caddy"
+        elif echo "$cmd" | grep -qi "nginx"; then
+            warn "  fix: sudo nginx -s stop  (or: brew services stop nginx)"
         fi
     done
 }
