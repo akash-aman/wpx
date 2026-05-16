@@ -136,9 +136,19 @@ if $INSTALL_APP && [[ "$PLATFORM" == "macos" ]]; then
   # macOS versions). Use -plist mode and parse the result. PlistBuddy
   # needs a real file, not stdin, so stage the plist on disk first.
   PLIST_FILE="$TMPDIR/attach.plist"
-  yes | hdiutil attach -nobrowse -noautoopen -plist "$TMPDIR/$DMG" \
-        > "$PLIST_FILE" 2>/dev/null \
-    || fail "hdiutil attach failed for $DMG"
+
+  # Don't pipe `yes` into hdiutil — under `set -o pipefail` the SIGPIPE
+  # from `yes` (when hdiutil closes stdin) propagates as a pipeline
+  # failure even on a successful mount. Wpx DMGs don't carry an SLA.
+  # Capture stderr so the user sees the real hdiutil error if it fails.
+  HDIUTIL_ERR="$TMPDIR/hdiutil.err"
+  if ! hdiutil attach -nobrowse -noautoopen -plist "$TMPDIR/$DMG" \
+        > "$PLIST_FILE" 2> "$HDIUTIL_ERR"; then
+    echo "── hdiutil stderr ────────────────────────────────────"
+    cat "$HDIUTIL_ERR" >&2 || true
+    echo "──────────────────────────────────────────────────────"
+    fail "hdiutil attach failed for $DMG"
+  fi
 
   MOUNT=""
   for i in 0 1 2 3 4; do
