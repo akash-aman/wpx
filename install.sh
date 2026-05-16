@@ -157,8 +157,9 @@ if $INSTALL_APP && [[ "$PLATFORM" == "macos" ]]; then
   done
 
   if [[ -z "$MOUNT" || ! -d "$MOUNT" ]]; then
-    # Fallback: pick the freshest /Volumes/wpx* mount.
-    MOUNT="$(ls -dt /Volumes/wpx* 2>/dev/null | head -n1)"
+    # Fallback: pick the freshest /Volumes/[Ww]px* mount (real DMG
+    # uses /Volumes/WPX <version>).
+    MOUNT="$(ls -dt /Volumes/[Ww][Pp][Xx]* 2>/dev/null | head -n1)"
   fi
   [[ -d "$MOUNT" ]] || fail "could not resolve DMG mount point"
   info "mounted at $MOUNT"
