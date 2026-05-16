@@ -61,42 +61,57 @@ esac
 # ── 2. Dependencies ──────────────────────────────────────────
 header "[2/8] Dependencies"
 
+# System tools that ship with macOS — bail if somehow missing.
 for dep in curl shasum; do
     if command -v "$dep" &>/dev/null; then
         log "$dep: found"
     else
-        fail "$dep is required but not found"
+        fail "$dep is required but not found (re-install macOS command line tools: xcode-select --install)"
     fi
 done
 
-# Optional deps
+# Homebrew is our installer for everything below. Stop the world if
+# it's not on PATH — every other dep flows through it.
+if ! command -v brew &>/dev/null; then
+    fail "Homebrew is required. Install it first:
+    /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"
+  Then re-run this installer."
+fi
+log "brew: found"
+
+# Auto-install required brew formulae. Anything missing is installed
+# right here — the installer doesn't continue with half-set-up deps.
+install_brew_formula() {
+    local pkg="$1"
+    local label="${2:-$pkg}"
+    if brew list --formula "$pkg" &>/dev/null; then
+        log "$label: found"
+        return 0
+    fi
+    info "installing $label: brew install $pkg"
+    if ! brew install "$pkg"; then
+        fail "brew install $pkg failed — fix the error above and re-run"
+    fi
+    log "$label: installed"
+}
+
+# mkcert (+ nss) for trusted HTTPS via the local CA.
+install_brew_formula mkcert "mkcert (HTTPS)"
+install_brew_formula nss    "nss (HTTPS for Firefox)"
+
+# PHP extension shared library dependencies (macOS only).
+if [[ "$GOOS" == "darwin" ]]; then
+    for pkg in libyaml imagemagick libmemcached zlib; do
+        install_brew_formula "$pkg"
+    done
+fi
+
+# Docker stays optional — wpx only uses it when the user explicitly
+# opts a service into the docker runtime.
 if command -v docker &>/dev/null; then
     log "docker: found (optional — services run natively by default, Docker is an opt-in runtime)"
 else
-    warn "docker: not found (optional — services run natively; Docker is only needed if you opt in)"
-fi
-
-if command -v mkcert &>/dev/null; then
-    log "mkcert: found (for HTTPS)"
-else
-    warn "mkcert: not found — install: brew install mkcert nss"
-fi
-
-# PHP extension shared library dependencies (macOS only)
-if [[ "$GOOS" == "darwin" ]]; then
-    EXT_DEPS_MISSING=()
-    for pkg in libyaml imagemagick libmemcached zlib; do
-        if brew list --formula "$pkg" &>/dev/null; then
-            log "$pkg: found"
-        else
-            EXT_DEPS_MISSING+=("$pkg")
-        fi
-    done
-    if [[ ${#EXT_DEPS_MISSING[@]} -gt 0 ]]; then
-        warn "missing PHP extension dependencies: ${EXT_DEPS_MISSING[*]}"
-        info "installing: brew install ${EXT_DEPS_MISSING[*]}"
-        brew install "${EXT_DEPS_MISSING[@]}" || warn "brew install failed — some PHP extensions may not load"
-    fi
+    warn "docker: not found (optional — install Docker Desktop only if you want the opt-in runtime)"
 fi
 
 # ── 3. Resolve version ───────────────────────────────────────
