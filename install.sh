@@ -132,9 +132,21 @@ if $INSTALL_APP && [[ "$PLATFORM" == "macos" ]]; then
     || fail "DMG download failed (${DMG_URL}) — does this release have a desktop build?"
 
   info "mounting..."
-  MOUNT="$(hdiutil attach -nobrowse -quiet "$TMPDIR/$DMG" \
-            | awk '/\/Volumes\//{$1=$2=""; sub(/^[[:space:]]+/,""); print; exit}')"
+  # Parse the mount point from hdiutil's plist output instead of the
+  # human-readable table — the text format varies across macOS
+  # versions and gets suppressed entirely by `-quiet`. Pipe `yes`
+  # through stdin so any SLA prompt is auto-accepted.
+  PLIST="$(yes | hdiutil attach -nobrowse -noautoopen -plist "$TMPDIR/$DMG" 2>/dev/null)" \
+    || fail "hdiutil attach failed for $DMG"
+  MOUNT="$(printf '%s' "$PLIST" \
+            | /usr/libexec/PlistBuddy -c 'Print :system-entities' /dev/stdin 2>/dev/null \
+            | awk '/mount-point = /{sub(/^.*mount-point = /,""); print; exit}')"
+  if [[ -z "$MOUNT" || ! -d "$MOUNT" ]]; then
+    # Fallback: scan /Volumes for a freshly-mounted wpx volume.
+    MOUNT="$(ls -dt /Volumes/wpx* 2>/dev/null | head -n1)"
+  fi
   [[ -d "$MOUNT" ]] || fail "could not mount $DMG"
+  info "mounted at $MOUNT"
 
   APP_SRC="$MOUNT/wpx.app"
   [[ -d "$APP_SRC" ]] || fail "wpx.app missing inside DMG"
