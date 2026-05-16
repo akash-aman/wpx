@@ -80,8 +80,14 @@ done
 # ── Resolve version ─────────────────────────────────────────────
 if [[ -z "$WPX_VERSION" ]]; then
   info "querying latest release..."
-  WPX_VERSION=$(curl -fsSL "${GITHUB_API}/releases?per_page=1" \
-                | grep -m1 '"tag_name"' \
+  # Read curl output into a variable first; piping it directly into
+  # `grep -m1` makes grep close stdin after the first match, which
+  # gives curl a SIGPIPE → exit 23 under `set -o pipefail`.
+  RELEASES_JSON=$(curl -fsSL "${GITHUB_API}/releases?per_page=1") \
+    || fail "failed to query ${GITHUB_API}/releases"
+  WPX_VERSION=$(printf '%s\n' "$RELEASES_JSON" \
+                | grep '"tag_name"' \
+                | head -n1 \
                 | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
   [[ -n "$WPX_VERSION" ]] || fail "no releases found at ${GITHUB_API}/releases"
 fi
