@@ -64,142 +64,261 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 
 #### Cache
 
-| Tool | Description |
-|------|-------------|
-| `cache_flush` | Flush the object cache (Redis or Memcached) for a site. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>cache_flush</code></td><td>Flush the object cache (Redis or Memcached) for a site.</td></tr>
+</tbody>
+</table>
 
 #### Database
 
-| Tool | Description |
-|------|-------------|
-| `db_export` | Export a site's database to a SQL file. Returns the output file path. |
-| `db_import` | Import a SQL dump into a site's database. Supports .sql and .sql.gz files. |
-| `db_query` | Run a SQL query directly against a site's MySQL/MariaDB database. Bypasses wp-cli and VIP restrictions. Returns tab-separated results. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>db_export</code></td><td>Export a site's database to a SQL file. Returns the output file path.</td></tr>
+<tr><td><code>db_import</code></td><td>Import a SQL dump into a site's database. Supports .sql and .sql.gz files.</td></tr>
+<tr><td><code>db_query</code></td><td>Run a SQL query directly against a site's MySQL/MariaDB database. Bypasses wp-cli and VIP restrictions. Returns tab-separated results.</td></tr>
+</tbody>
+</table>
 
 #### Diagnostics
 
-| Tool | Description |
-|------|-------------|
-| `doctor` | Run preflight/health checks. |
-| `logs_read` | Read recent log entries for a site. |
-| `orphans_check` | Detect stale PIDs, orphan processes, port conflicts. |
-| `pull` | Import production database and rewire domains. |
-| `upgrade_config` | Backfill missing .wpx.json fields and regenerate configs. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>doctor</code></td><td>Run preflight/health checks.</td></tr>
+<tr><td><code>logs_read</code></td><td>Read recent log entries for a site.</td></tr>
+<tr><td><code>orphans_check</code></td><td>Detect stale PIDs, orphan processes, port conflicts.</td></tr>
+<tr><td><code>pull</code></td><td>Import production database and rewire domains.</td></tr>
+<tr><td><code>upgrade_config</code></td><td>Backfill missing .wpx.json fields and regenerate configs.</td></tr>
+</tbody>
+</table>
 
 #### Domains
 
-| Tool | Description |
-|------|-------------|
-| `domain_add` | Map a domain to a multisite. Adds proxy config, /etc/hosts entry, and SSL certificate. |
-| `domain_remove` | Remove a domain mapping from a multisite. |
-| `domain_list` | List all domains mapped to a multisite. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>domain_add</code></td><td>Map a domain to a multisite. Adds proxy config, /etc/hosts entry, and SSL certificate.</td></tr>
+<tr><td><code>domain_remove</code></td><td>Remove a domain mapping from a multisite.</td></tr>
+<tr><td><code>domain_list</code></td><td>List all domains mapped to a multisite.</td></tr>
+</tbody>
+</table>
 
 #### Meta
 
-| Tool | Description |
-|------|-------------|
-| `help_discover` | Discover wpx commands, subcommands, and flags by running --help. Use this when you need to find exact flag names or available subcommands. Examples: command='create', command='db import', command='domain'. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>help_discover</code></td><td>Discover wpx commands, subcommands, and flags by running --help. Use this when you need to find exact flag names or available subcommands. Examples: command='create', command='db import', command='domain'.</td></tr>
+</tbody>
+</table>
 
 #### Site lifecycle
 
-| Tool | Description |
-|------|-------------|
-| `site_create` | Create a new WordPress site with the specified stack. Returns site details including URLs and ports. |
-| `site_destroy` | Destroy a WordPress site — stops services, removes files, cleans hosts and proxy. |
-| `site_start` | Start all or a specific service for a site. |
-| `site_stop` | Stop all or a specific service for a site. |
-| `site_restart` | Restart all or a specific service for a site. |
-| `site_reload` | Graceful reload (SIGHUP/SIGUSR2) for all or a specific service. |
-| `site_apply` | Regenerate all config files from .wpx.json and reload services. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>site_create</code></td><td>Create a new WordPress site with the specified stack. Returns site details including URLs and ports.</td></tr>
+<tr><td><code>site_destroy</code></td><td>Destroy a WordPress site — stops services, removes files, cleans hosts and proxy.</td></tr>
+<tr><td><code>site_start</code></td><td>Start all or a specific service for a site.</td></tr>
+<tr><td><code>site_stop</code></td><td>Stop all or a specific service for a site.</td></tr>
+<tr><td><code>site_restart</code></td><td>Restart all or a specific service for a site.</td></tr>
+<tr><td><code>site_reload</code></td><td>Graceful reload (SIGHUP/SIGUSR2) for all or a specific service.</td></tr>
+<tr><td><code>site_apply</code></td><td>Regenerate all config files from .wpx.json and reload services.</td></tr>
+</tbody>
+</table>
 
 #### Plugins (wp-cli)
 
-| Tool | Description |
-|------|-------------|
-| `plugin_list` | List all installed plugins for a site with status, version, and update info. |
-| `plugin_install` | Install a WordPress plugin from the plugin directory or a URL. |
-| `plugin_activate` | Activate an installed WordPress plugin. |
-| `plugin_deactivate` | Deactivate an active WordPress plugin. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>plugin_list</code></td><td>List all installed plugins for a site with status, version, and update info.</td></tr>
+<tr><td><code>plugin_install</code></td><td>Install a WordPress plugin from the plugin directory or a URL.</td></tr>
+<tr><td><code>plugin_activate</code></td><td>Activate an installed WordPress plugin.</td></tr>
+<tr><td><code>plugin_deactivate</code></td><td>Deactivate an active WordPress plugin.</td></tr>
+</tbody>
+</table>
 
 #### Plugins (DB-direct)
 
-| Tool | Description |
-|------|-------------|
-| `plugin_db_list` | List all plugins from filesystem + DB status. Works even when the site has a fatal PHP error. Shows active/network-active/inactive status by reading directly from the database. |
-| `plugin_db_toggle` | Enable or disable one or more plugins via direct DB manipulation. Accepts comma-separated plugin paths for batch operations. Single DB read + single DB write. Bypasses wp-cli and PHP. |
-| `plugin_db_disable_all` | Emergency: disable ALL plugins via DB. Use when a site is completely broken by a plugin fatal error. |
-| `plugin_db_enable_all` | Enable ALL plugins found on disk via DB. Scans wp-content/plugins/ and activates every discovered plugin. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>plugin_db_list</code></td><td>List all plugins from filesystem + DB status. Works even when the site has a fatal PHP error. Shows active/network-active/inactive status by reading directly from the database.</td></tr>
+<tr><td><code>plugin_db_toggle</code></td><td>Enable or disable one or more plugins via direct DB manipulation. Accepts comma-separated plugin paths for batch operations. Single DB read + single DB write. Bypasses wp-cli and PHP.</td></tr>
+<tr><td><code>plugin_db_disable_all</code></td><td>Emergency: disable ALL plugins via DB. Use when a site is completely broken by a plugin fatal error.</td></tr>
+<tr><td><code>plugin_db_enable_all</code></td><td>Enable ALL plugins found on disk via DB. Scans wp-content/plugins/ and activates every discovered plugin.</td></tr>
+</tbody>
+</table>
 
 #### Reverse proxy
 
-| Tool | Description |
-|------|-------------|
-| `proxy_start` | Start the global reverse proxy (ports 80/443). |
-| `proxy_stop` | Stop the global reverse proxy. |
-| `proxy_reload` | Reload the global reverse proxy configuration. |
-| `proxy_status` | Show proxy status and ports. |
-| `proxy_clean` | Remove orphaned proxy configs for destroyed sites. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>proxy_start</code></td><td>Start the global reverse proxy (ports 80/443).</td></tr>
+<tr><td><code>proxy_stop</code></td><td>Stop the global reverse proxy.</td></tr>
+<tr><td><code>proxy_reload</code></td><td>Reload the global reverse proxy configuration.</td></tr>
+<tr><td><code>proxy_status</code></td><td>Show proxy status and ports.</td></tr>
+<tr><td><code>proxy_clean</code></td><td>Remove orphaned proxy configs for destroyed sites.</td></tr>
+</tbody>
+</table>
 
 #### Pull from production
 
-| Tool | Description |
-|------|-------------|
-| `pull_detect` | Detect all production domains in a site's database and propose local domain mappings. Returns JSON with proposed from/to pairs for each blog in the multisite. Use before pull_execute to let the user review and adjust mappings. |
-| `pull_execute` | Execute domain migration: updates wp_blogs, runs search-replace per mapping, adds proxy entries, reports hosts to add. Pass the mappings JSON from pull_detect (modified if needed). Use quick=true for Go-based parallel search-replace (faster, bypasses WP-CLI). |
-| `hosts_add` | Add /etc/hosts entries for a site. Auto-discovers all domains: primary for single sites, primary + subsite domains for subdomain multisites. Skips existing entries. Requires sudo. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>pull_detect</code></td><td>Detect all production domains in a site's database and propose local domain mappings. Returns JSON with proposed from/to pairs for each blog in the multisite. Use before pull_execute to let the user review and adjust mappings.</td></tr>
+<tr><td><code>pull_execute</code></td><td>Execute domain migration: updates wp_blogs, runs search-replace per mapping, adds proxy entries, reports hosts to add. Pass the mappings JSON from pull_detect (modified if needed). Use quick=true for Go-based parallel search-replace (faster, bypasses WP-CLI).</td></tr>
+<tr><td><code>hosts_add</code></td><td>Add /etc/hosts entries for a site. Auto-discovers all domains: primary for single sites, primary + subsite domains for subdomain multisites. Skips existing entries. Requires sudo.</td></tr>
+</tbody>
+</table>
 
 #### Database — search / replace
 
-| Tool | Description |
-|------|-------------|
-| `search_replace` | Run a search-replace across all WordPress tables. Handles serialized data safely. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>search_replace</code></td><td>Run a search-replace across all WordPress tables. Handles serialized data safely.</td></tr>
+</tbody>
+</table>
 
 #### Site management
 
-| Tool | Description |
-|------|-------------|
-| `site_list` | List all wpx-managed WordPress sites with their domains, ports, and status. |
-| `site_info` | Show detailed configuration for a site: stack versions, ports, paths, features. Access the site via the domain URL (e.g. https://domain.test/) — do NOT use localhost:<port>. The ports object shows internal backend ports for direct DB/Redis connections only; the wpx proxy routes HTTP/HTTPS on standard ports 80/443. |
-| `site_open` | Get the URL for a site or one of its services (does not open a browser). |
-| `site_env` | Get environment variables for a site's shell (PHP path, socket paths, etc.). |
-| `version` | Print the wpx version. |
-| `wpx_init` | Initialize the wpx global directory (~/.wpx/) and local CA for HTTPS. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>site_list</code></td><td>List all wpx-managed WordPress sites with their domains, ports, and status.</td></tr>
+<tr><td><code>site_info</code></td><td>Show detailed configuration for a site: stack versions, ports, paths, features. Access the site via the domain URL (e.g. https://domain.test/) — do NOT use localhost:&lt;port&gt;. The ports object shows internal backend ports for direct DB/Redis connections only; the wpx proxy routes HTTP/HTTPS on standard ports 80/443.</td></tr>
+<tr><td><code>site_open</code></td><td>Get the URL for a site or one of its services (does not open a browser).</td></tr>
+<tr><td><code>site_env</code></td><td>Get environment variables for a site's shell (PHP path, socket paths, etc.).</td></tr>
+<tr><td><code>version</code></td><td>Print the wpx version.</td></tr>
+<tr><td><code>wpx_init</code></td><td>Initialize the wpx global directory (~/.wpx/) and local CA for HTTPS.</td></tr>
+</tbody>
+</table>
 
 #### Themes (wp-cli)
 
-| Tool | Description |
-|------|-------------|
-| `theme_list` | List all installed themes for a site. |
-| `theme_install` | Install a WordPress theme from the theme directory or a URL. |
-| `theme_activate` | Activate an installed WordPress theme. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>theme_list</code></td><td>List all installed themes for a site.</td></tr>
+<tr><td><code>theme_install</code></td><td>Install a WordPress theme from the theme directory or a URL.</td></tr>
+<tr><td><code>theme_activate</code></td><td>Activate an installed WordPress theme.</td></tr>
+</tbody>
+</table>
 
 #### Themes (DB-direct)
 
-| Tool | Description |
-|------|-------------|
-| `theme_db_list` | List all themes from filesystem + active status from DB. Works even when the site has a fatal PHP error. |
-| `theme_db_switch` | Switch the active theme via direct DB update. Bypasses wp-cli and PHP — works even when the site is broken. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>theme_db_list</code></td><td>List all themes from filesystem + active status from DB. Works even when the site has a fatal PHP error.</td></tr>
+<tr><td><code>theme_db_switch</code></td><td>Switch the active theme via direct DB update. Bypasses wp-cli and PHP — works even when the site is broken.</td></tr>
+</tbody>
+</table>
 
 #### WordPress users
 
-| Tool | Description |
-|------|-------------|
-| `user_create` | Create a WordPress user. |
-| `user_list` | List all WordPress users for a site. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>user_create</code></td><td>Create a WordPress user.</td></tr>
+<tr><td><code>user_list</code></td><td>List all WordPress users for a site.</td></tr>
+</tbody>
+</table>
 
 #### WP-CLI passthrough
 
-| Tool | Description |
-|------|-------------|
-| `wp_run` | Execute any WP-CLI command against a site. Examples: 'plugin list', 'option get siteurl', 'cache flush', 'db query \ |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>wp_run</code></td><td>Execute any WP-CLI command against a site. Examples: 'plugin list', 'option get siteurl', 'cache flush', 'db query \</td></tr>
+</tbody>
+</table>
 
 #### Xdebug
 
-| Tool | Description |
-|------|-------------|
-| `xdebug_on` | Enable Xdebug for a site. Returns IDE configuration. |
-| `xdebug_off` | Disable Xdebug for a site. |
-| `xdebug_status` | Check Xdebug status for a site. |
+<table width="100%">
+<colgroup>
+<col width="220">
+<col width="auto">
+</colgroup>
+<thead><tr><th align="left">Tool</th><th align="left">Description</th></tr></thead>
+<tbody>
+<tr><td><code>xdebug_on</code></td><td>Enable Xdebug for a site. Returns IDE configuration.</td></tr>
+<tr><td><code>xdebug_off</code></td><td>Disable Xdebug for a site.</td></tr>
+<tr><td><code>xdebug_status</code></td><td>Check Xdebug status for a site.</td></tr>
+</tbody>
+</table>
 
 <!-- MCP_TOOLS_END -->
 
