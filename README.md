@@ -65,7 +65,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Cache
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>cache_flush</code></td><td>Flush the object cache (Redis or Memcached) for a site.</td></tr>
 </tbody>
@@ -74,7 +74,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Database
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>db_export</code></td><td>Export a site's database to a SQL file. Returns the output file path.</td></tr>
 <tr><td><code>db_import</code></td><td>Import a SQL dump into a site's database. Supports .sql and .sql.gz files.</td></tr>
@@ -85,7 +85,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Diagnostics
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>doctor</code></td><td>Run preflight/health checks.</td></tr>
 <tr><td><code>logs_read</code></td><td>Read recent log entries for a site.</td></tr>
@@ -98,7 +98,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Domains
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>domain_add</code></td><td>Map a domain to a multisite. Adds proxy config, /etc/hosts entry, and SSL certificate.</td></tr>
 <tr><td><code>domain_remove</code></td><td>Remove a domain mapping from a multisite.</td></tr>
@@ -109,7 +109,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Meta
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>help_discover</code></td><td>Discover wpx commands, subcommands, and flags by running --help. Use this when you need to find exact flag names or available subcommands. Examples: command='create', command='db import', command='domain'.</td></tr>
 </tbody>
@@ -118,7 +118,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Site lifecycle
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>site_create</code></td><td>Create a new WordPress site with the specified stack. Returns site details including URLs and ports.</td></tr>
 <tr><td><code>site_destroy</code></td><td>Destroy a WordPress site — stops services, removes files, cleans hosts and proxy.</td></tr>
@@ -133,7 +133,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Plugins (wp-cli)
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>plugin_list</code></td><td>List all installed plugins for a site with status, version, and update info.</td></tr>
 <tr><td><code>plugin_install</code></td><td>Install a WordPress plugin from the plugin directory or a URL.</td></tr>
@@ -145,7 +145,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Plugins (DB-direct)
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>plugin_db_list</code></td><td>List all plugins from filesystem + DB status. Works even when the site has a fatal PHP error. Shows active/network-active/inactive status by reading directly from the database.</td></tr>
 <tr><td><code>plugin_db_toggle</code></td><td>Enable or disable one or more plugins via direct DB manipulation. Accepts comma-separated plugin paths for batch operations. Single DB read + single DB write. Bypasses wp-cli and PHP.</td></tr>
@@ -157,7 +157,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Reverse proxy
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>proxy_start</code></td><td>Start the global reverse proxy (ports 80/443).</td></tr>
 <tr><td><code>proxy_stop</code></td><td>Stop the global reverse proxy.</td></tr>
@@ -170,7 +170,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Pull from production
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>pull_detect</code></td><td>Detect all production domains in a site's database and propose local domain mappings. Returns JSON with proposed from/to pairs for each blog in the multisite. Use before pull_execute to let the user review and adjust mappings.</td></tr>
 <tr><td><code>pull_execute</code></td><td>Execute domain migration: updates wp_blogs, runs search-replace per mapping, adds proxy entries, reports hosts to add. Pass the mappings JSON from pull_detect (modified if needed). Use quick=true for Go-based parallel search-replace (faster, bypasses WP-CLI).</td></tr>
@@ -181,7 +181,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Database — search / replace
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>search_replace</code></td><td>Run a search-replace across all WordPress tables. Handles serialized data safely.</td></tr>
 </tbody>
@@ -190,7 +190,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Site management
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>site_list</code></td><td>List all wpx-managed WordPress sites with their domains, ports, and status.</td></tr>
 <tr><td><code>site_info</code></td><td>Show detailed configuration for a site: stack versions, ports, paths, features. Access the site via the domain URL (e.g. https://domain.test/) — do NOT use localhost:&lt;port&gt;. The ports object shows internal backend ports for direct DB/Redis connections only; the wpx proxy routes HTTP/HTTPS on standard ports 80/443.</td></tr>
@@ -204,7 +204,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Themes (wp-cli)
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>theme_list</code></td><td>List all installed themes for a site.</td></tr>
 <tr><td><code>theme_install</code></td><td>Install a WordPress theme from the theme directory or a URL.</td></tr>
@@ -215,7 +215,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Themes (DB-direct)
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>theme_db_list</code></td><td>List all themes from filesystem + active status from DB. Works even when the site has a fatal PHP error.</td></tr>
 <tr><td><code>theme_db_switch</code></td><td>Switch the active theme via direct DB update. Bypasses wp-cli and PHP — works even when the site is broken.</td></tr>
@@ -225,7 +225,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### WordPress users
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>user_create</code></td><td>Create a WordPress user.</td></tr>
 <tr><td><code>user_list</code></td><td>List all WordPress users for a site.</td></tr>
@@ -235,7 +235,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### WP-CLI passthrough
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>wp_run</code></td><td>Execute any WP-CLI command against a site. Examples: 'plugin list', 'option get siteurl', 'cache flush', 'db query \</td></tr>
 </tbody>
@@ -244,7 +244,7 @@ Every wpx capability is exposed as an MCP tool — **54 tools across 17 categori
 #### Xdebug
 
 <table>
-<thead><tr><th align="left">Tool</th><th align="left">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr></thead>
+<thead><tr><th align="left">Tool</th><th align="left">Description<img src="https://raw.githubusercontent.com/akash-aman/wpx/main/assets/spacer.png" width="800" height="1" alt=""></th></tr></thead>
 <tbody>
 <tr><td><code>xdebug_on</code></td><td>Enable Xdebug for a site. Returns IDE configuration.</td></tr>
 <tr><td><code>xdebug_off</code></td><td>Disable Xdebug for a site.</td></tr>
